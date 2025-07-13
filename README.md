@@ -1,33 +1,60 @@
-# GLPI AI Automation
-## Descripción del Proyecto
-Este proyecto busca modernizar y automatizar la plataforma open source GLPI mediante la integración de agentes de IA y la creación de una arquitectura de intercambio de datos basada en servicios MCP (Model Context Protocol). El objetivo es automatizar respuestas de helpdesk técnico para usuarios no técnicos, optimizar flujos de trabajo y mejorar la experiencia de usuario en GLPI.
+# GLPI AI Agent - Prototipo Inicial
 
-## Características Principales
-- Resumen y enriquecimiento contextual de tickets mediante IA
-- Generación automática de plantillas técnicas
-- Integración con herramientas de diagnóstico (Zabbix, Wazuh, Wiki)
-- Arquitectura de intercambio de datos MCP
-- Información contextual inteligente para usuarios
+Este proyecto implementa un agente de inteligencia artificial que se integra con la plataforma de helpdesk GLPI para generar resúmenes automáticos de tickets y optimizar los flujos de trabajo técnicos.
 
-## Progreso Actual
-### Tareas Completadas
+Para más información puedes visitar el Readme de la rama principal del proyecto
 
-✅ **Análisis y Configuración de Entorno GLPI (Local)**  
-- GLPI instalado mediante Docker con base de datos MariaDB  
-- Pruebas en localhost de todas las configuraciones y módulos  
+**Nota**: Este prototipo está diseñado para funcionar sin credenciales reales de GLPI, usando datos simulados para demostrar la funcionalidad de generación de resúmenes con IA. 
 
-✅ **Configuración de Entorno de Desarrollo GLPI**  
 
-✅ **Configuración Básica de Entorno para Agentes Python**  
-- Establecimiento del framework para agentes basados en Python  
+## Requisitos de Software
 
-✅ **Análisis de Datos y Servicios**  
-- Evaluación de servicios de IA y LLMs de código abierto mediante Ollama  
+### 1. Python 3.x
+- **Versión recomendada**: Python 3.11 o superior
+- **Incluye**: pip para instalar dependencias
 
-## Métricas de Éxito
+### 2. Ollama (Programa externo)
+- **Estado**: Debe estar instalado y ejecutándose
+- **Modelo requerido**: `phi3:mini`
+- **Puerto por defecto**: 11434
+- **Comandos necesarios**:
+  ```bash
+  ollama serve          # Iniciar el servidor
+  ollama pull phi3:mini # Descargar el modelo
+  ```
 
-- Reducción >70% en tiempo de primera respuesta
-- Precisión >85% en respuestas automáticas
-- Reducción >50% en tickets escalados manualmente
-- Reducción >40% en tiempo promedio de resolución
-- Satisfacción de usuario >4.0/5.0
+### 3. Dependencias de Python
+Archivo `requirements.txt`:
+```
+python-dotenv==1.0.0
+requests==2.31.0
+```
+
+
+## Orden de Instalación
+
+1. **Instalar Python 3.x**
+   - Descargar desde [python.org](https://python.org)
+   - Verificar instalación: `python --version`
+
+2. **Instalar Ollama**
+   - Descargar desde [ollama.ai](https://ollama.ai)
+   - Verificar instalación: `ollama --version`
+
+3. **Descargar modelo de IA**
+   ```bash
+   ollama pull phi3:mini
+   ```
+
+4. **Instalar dependencias de Python**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Configurar variables de entorno** (opcional)
+   - Crear archivo `.env` con la configuración de GLPI
+
+6. **Ejecutar el agente**
+   ```bash
+   python src/agent.py
+   ```
