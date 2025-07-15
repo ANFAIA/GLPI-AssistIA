@@ -1,7 +1,3 @@
-Of course. Here is the Markdown text explaining how to mount an MCP server on a FastAPI application, based on the provided documentation.
-
-***
-
 # Mounting an MCP Server on FastAPI
 
 You can integrate a `gofast-mcp` server directly into a FastAPI application by mounting it as a sub-application. This powerful feature allows you to run both your primary web API and your MCP administrative server within a single, unified application process.
