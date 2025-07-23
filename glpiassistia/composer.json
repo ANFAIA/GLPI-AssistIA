@@ -1,0 +1,20 @@
+﻿{
+    "name": "glpi/glpi_assistia",
+    "description": "Plugin de asistencia con IA para GLPI",
+    "type": "glpi-plugin",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.85",
+        "glpi-project/tools": "^0.7.6"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.4.0"
+        },
+        "sort-packages": true
+    }
+}
+
