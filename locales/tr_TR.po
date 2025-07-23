@@ -1,0 +1,210 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Kaya Zeren <kayazeren@gmail.com>, 2015-2016,2018-2019,2021,2023-2024
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI Plugin - Example\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-30 01:37+0000\n"
+"PO-Revision-Date: 2015-09-18 12:02+0000\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2015-2016,2018-2019,2021,2023-2024\n"
+"Language-Team: Turkish (Turkey) (http://app.transifex.com/teclib/glpi-plugin-example/language/tr_TR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr_TR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/Example.php:447
+msgid "But... I say I will do nothing for:"
+msgstr "Ancak... Şunun için hiç bir şey yapma diyeceğim:"
+
+#: src/RuleTest.php:82
+msgid "Category (class)"
+msgstr "Kategori (sınıf)"
+
+#: src/Example.php:154
+msgid "Cron description for example"
+msgstr "Örnek zamanlanmış görev açıklaması"
+
+#: src/Example.php:155
+msgid "Cron parameter for example"
+msgstr "Örnek zamanlanmış görev parametresi"
+
+#: hook.php:371
+msgid "Delete Computer Hook"
+msgstr "Bilgisayar kancasını sil"
+
+#: src/Example.php:390
+msgid "Do Nothing - just for fun"
+msgstr "Hiç bir işlem yapmaz - Yalnız eğlence için"
+
+#: hook.php:355
+msgid "Empty Computer Hook"
+msgstr "Bilgisayar kancasını boşalt"
+
+#: src/NotificationTargetExample.php:48 src/Example.php:212
+#: src/Example.php:218 src/Example.php:221
+msgid "Example"
+msgstr "Örnek"
+
+#: hook.php:617
+msgid "Example datas"
+msgstr "Örnek veriler"
+
+#: hook.php:612
+msgid "Example event"
+msgstr "Örnek etkinlik"
+
+#: hook.php:69
+msgid "Example plugin"
+msgstr "Örnek eklenti"
+
+#: hook.php:83
+msgid "Example plugin new"
+msgstr "Örnek eklenti yeni"
+
+#: src/Example.php:277
+msgid "First tab of Plugin example"
+msgstr "Örnek eklentinin ilk sekmesi"
+
+#: src/Example.php:374
+msgid "History from plugin example"
+msgstr "Örnek eklenti geçmişi"
+
+#: setup.php:341
+msgid "Installed / not configured"
+msgstr "Kurulmuş / yapılandırılmamış"
+
+#: hook.php:289 hook.php:299
+msgid "Not really specific - Just for example"
+msgstr "Özel bir şey değil - Yalnız örnek olarak"
+
+#: hook.php:319
+msgid "Not really specific - Use your own dropdown - Just for example"
+msgstr "Özel bir şey değil - Kendi açılan kutunuzu kullanın - Yalnız örnek olarak"
+
+#: src/Example.php:480
+msgid "Plugin Example"
+msgstr "Örnek eklenti"
+
+#: src/Example.php:485
+msgid "Plugin Example (static)"
+msgstr "Örnek eklenti (sabit)"
+
+#: hook.php:54
+msgid "Plugin Example Dropdown"
+msgstr "Örnek eklenti açılan kutu"
+
+#: src/Dropdown.php:45 src/Dropdown.php:47
+msgid "Plugin Example Dropdowns"
+msgstr "Örnek eklenti açılan kutular"
+
+#: src/Example.php:244
+msgid "Plugin Example on Phone"
+msgstr "Telefon için örnek eklenti"
+
+#: src/Example.php:248
+msgid "Plugin central action"
+msgstr "Eklenti temel işlemi"
+
+#. TRANS: %1$s is a class name, %2$d is an item ID
+#: src/Example.php:285
+#, php-format
+msgid "Plugin example CLASS=%1$s id=%2$d"
+msgstr "Örnek eklenti CLASS=%1$s id=%2$d"
+
+#: hook.php:674 hook.php:687
+msgid "Plugin example displays on central page"
+msgstr "Örnek eklenti merkez sayfada görüntülenir"
+
+#: hook.php:681
+msgid "Plugin example displays on login page"
+msgstr "Örnek eklenti oturum açma sayfasında görüntülenir"
+
+#: src/Example.php:271
+msgid "Plugin mailing action"
+msgstr "Eklenti postalama işlemi"
+
+#: hook.php:365
+msgid "Pre Delete Computer Hook"
+msgstr "Bilgisayar kancasını silme öncesi"
+
+#: hook.php:379
+msgid "Pre Purge Computer Hook"
+msgstr "Bilgisayar kancasını boşaltma öncesi"
+
+#: hook.php:393
+msgid "Pre Restore Computer Hook"
+msgstr "Bilgisayar kancasını geri yükleme öncesi"
+
+#: hook.php:400
+msgid "Pre Restore Phone Hook"
+msgstr "Telefon kancasını geri yükleme öncesi"
+
+#: hook.php:341
+msgid "Pre Update Computer Hook"
+msgstr "Bilgisayar kancasını güncelleme öncesi"
+
+#: hook.php:385
+msgid "Purge Computer Hook"
+msgstr "Bilgisayar kancasını boşalt"
+
+#: hook.php:406
+msgid "Restore Computer Hook"
+msgstr "Bilgisayar kancasını geri yükle"
+
+#: src/Example.php:424 src/Example.php:446
+msgid "Right it is the type I want..."
+msgstr "Doğru bu benim istediğim tür..."
+
+#: src/Example.php:279
+msgid "Second tab of Plugin example"
+msgstr "Örnek eklentinin ikinci sekmesi"
+
+#: src/Example.php:225 src/Example.php:232
+msgid "Test Plugin"
+msgstr "Deneme eklentisi"
+
+#: src/Example.php:226
+msgid "Test Plugin 2"
+msgstr "Deneme eklentisi 2"
+
+#: src/Example.php:66
+msgid "Test link"
+msgstr "Deneme bağlantısı"
+
+#: front/config.php:48
+msgid "This is the plugin config page"
+msgstr "Eklenti yapılandırması"
+
+#. TRANS: %1$s is the source type, %2$d is the source ID, %3$d is the
+#. destination ID
+#: hook.php:414
+#, php-format
+msgid "Transfer Computer Hook %1$s %2$d -> %3$d"
+msgstr "Bilgisayar kancasını aktar %1$s %2$d -> %3$d"
+
+#: hook.php:347
+#, php-format
+msgid "Update Computer Hook (%s)"
+msgstr "Bilgisayar kancasını güncelle (%s)"
+
+#: src/Example.php:401 src/Example.php:425
+msgid "Write in item history"
+msgstr "Öge geçmişine yaz"
+
+#: src/Example.php:405
+msgid "but do nothing :)"
+msgstr "Ama hiç bir şey yapma :)"
+
+#: hook.php:268
+msgid "plugin_example_DoIt"
+msgstr "eklenti_ornek_Yap"
+
+#: src/Example.php:314
+msgid "test planning example 1"
+msgstr "örnek deneme planı 1"

@@ -9,21 +9,6 @@ Este proyecto busca modernizar y automatizar la plataforma open source GLPI medi
 - Arquitectura de intercambio de datos MCP
 - Información contextual inteligente para usuarios
 
-## Progreso Actual
-### Tareas Completadas
-
-✅ **Análisis y Configuración de Entorno GLPI (Local)**  
-- GLPI instalado mediante Docker con base de datos MariaDB  
-- Pruebas en localhost de todas las configuraciones y módulos  
-
-✅ **Configuración de Entorno de Desarrollo GLPI**  
-
-✅ **Configuración Básica de Entorno para Agentes Python**  
-- Establecimiento del framework para agentes basados en Python  
-
-✅ **Análisis de Datos y Servicios**  
-- Evaluación de servicios de IA y LLMs de código abierto mediante Ollama  
-
 ## Métricas de Éxito
 
 - Reducción >70% en tiempo de primera respuesta
