@@ -1,0 +1,27 @@
+analizar_sentimiento_task:
+  description: >
+    Analizar el texto de la incidencia proporcionada en la variable {incidencia}.
+    Identificar el estado emocional del usuario (frustrado, calmado, apurado, etc.)
+    y determinar el nivel de urgencia percibido.
+  expected_output: >
+    Un nivel de urgencia (bajo, medio, alto)
+  agent: analista_sentimiento
+
+clasificar_incidencia_task:
+  description: >
+    Revisar el contenido de la {incidencia} y clasificar la incidencia en una de las categorías técnicas predefinidas.
+  expected_output: >
+    Una única etiqueta de texto que represente la categoría de la incidencia.
+    Por ejemplo: "Redes", "Hardware" o "Software".
+  agent: clasificador_incidencias
+
+buscar_soluciones_task:
+  description: >
+    Utilizando la {incidencia} original y su clasificación, buscar en todas
+    las fuentes de conocimiento disponibles (Wiki, Zabbix, historial) para
+    encontrar soluciones relevantes.
+  expected_output: >
+    Un informe con el contexto y las posibles soluciones.
+    Debe incluir una sección para cada fuente de información consultada
+    y un resumen final con los pasos recomendados.
+  agent: buscador_soluciones
