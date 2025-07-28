@@ -8,18 +8,30 @@ from langchain_community.chat_models import ChatOllama
 class SoporteIncidenciasCrew():
     """
     Crew para gestionar y resolver incidencias de soporte técnico usando Ollama 
-    con el modelo deepseek-coder.
+    con modelos especializados para cada tarea.
     """
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
     def __init__(self):
         """
-        Inicializa el Crew definiendo el modelo LLM de Ollama que se usará.
+        Inicializa el Crew definiendo los modelos LLM de Ollama que se usarán para cada agente.
         """
-        self.ollama_llm = ChatOllama(
-            model = "deepseek-coder",
-            base_url = "http://localhost:11434" # URL estándar de Ollama
+        base_url = "http://localhost:11434" 
+
+        self.sentiment_analyst_llm = ChatOllama(
+            model="qwen3",
+            base_url=base_url
+        )
+
+        self.classifier_llm = ChatOllama(
+            model="deepseek-coder",
+            base_url=base_url
+        )
+
+        self.solution_finder_llm = ChatOllama(
+            model="deepseek-r1",
+            base_url=base_url
         )
 
     @agent
@@ -29,7 +41,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['analista_sentimiento'],
-            llm=self.ollama_llm,  # Asigna el modelo Ollama al agente
+            llm=self.sentiment_analyst_llm,  
             verbose=True
         )
 
@@ -40,7 +52,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['clasificador_incidencias'],
-            llm=self.ollama_llm,  # Asigna el modelo Ollama al agente
+            llm=self.classifier_llm,  
             verbose=True
         )
 
@@ -51,7 +63,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['buscador_soluciones'],
-            llm=self.ollama_llm,  # Asigna el modelo Ollama al agente
+            llm=self.solution_finder_llm,  
             verbose=True
         )
 
@@ -83,7 +95,7 @@ class SoporteIncidenciasCrew():
         return Task(
             config=self.tasks_config['buscar_soluciones_task'],
             agent=self.buscador_soluciones(),
-            output_file='informe_deepseek.md' # Fichero de salida opcional
+            output_file='informe_soluciones.md' 
         )
 
     @crew
