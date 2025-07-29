@@ -20,9 +20,12 @@ buscar_soluciones_task:
   description: >
     Utilizando la {incidencia} original y su clasificación, buscar en todas
     las fuentes de conocimiento disponibles (Wiki, Zabbix, historial) para
-    encontrar soluciones relevantes.
+    encontrar soluciones relevantes. Si no hay fuentes de conocimiento no inventes su contenido.
+    Si la incidencia menciona problemas de conectividad o acceso a un servicio, 
+    utiliza la herramienta de ping para verificar la disponibilidad de la URL: {url_a_verificar}.
   expected_output: >
     Un informe con el contexto y las posibles soluciones.
     Debe incluir una sección para cada fuente de información consultada
-    y un resumen final con los pasos recomendados.
+    y un resumen final con los pasos recomendados. Incluye el resultado
+    del ping si fue necesario.
   agent: buscador_soluciones

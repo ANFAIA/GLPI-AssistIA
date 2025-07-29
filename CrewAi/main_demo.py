@@ -15,7 +15,8 @@ def run():
 
     inputs = {
         'incidencia': incidencia_texto,
-        'cat': "Redes, Hardware, Software, Cuentas de usuario, Permisos"
+        'cat': "Redes, Hardware, Software, Cuentas de usuario, Permisos",
+        'url_a_verificar': 'google.com' 
     }
 
     SoporteIncidenciasCrew().crew().kickoff(inputs=inputs)

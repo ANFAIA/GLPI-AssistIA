@@ -2,6 +2,7 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_community.chat_models import ChatOllama
+from tools.ping_tool import ping_tool
 
 @CrewBase
 class SoporteIncidenciasCrew():
@@ -64,7 +65,8 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['buscador_soluciones'],
-            llm=self.solution_finder_llm,  
+            llm=self.solution_finder_llm,
+            tools=[ping_tool],
             verbose=True
         )
 
