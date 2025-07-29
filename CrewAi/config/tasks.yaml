@@ -4,7 +4,8 @@ analizar_sentimiento_task:
     Identificar el estado emocional del usuario (frustrado, calmado, apurado, etc.)
     y determinar el nivel de urgencia percibido.
   expected_output: >
-    Un nivel de urgencia (bajo, medio, alto)
+    Una única etiqueta de texto que resuma el estado del cliente. 
+    Por ejemplo: "URGENTE", "Enfadado", "Normal".
   agent: analista_sentimiento
 
 clasificar_incidencia_task:
