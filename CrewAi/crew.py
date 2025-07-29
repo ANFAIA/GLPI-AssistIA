@@ -1,4 +1,3 @@
-# src/my_project/crew.py
 
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
@@ -19,18 +18,20 @@ class SoporteIncidenciasCrew():
         """
         base_url = "http://localhost:11434" 
 
+        # --- CORRECCIÓN AQUÍ ---
+        # Añadimos el prefijo 'ollama/' para que litellm reconozca el proveedor
         self.sentiment_analyst_llm = ChatOllama(
-            model="qwen3",
+            model="ollama/qwen3",
             base_url=base_url
         )
 
         self.classifier_llm = ChatOllama(
-            model="deepseek-coder",
+            model="ollama/deepseek-coder",
             base_url=base_url
         )
 
         self.solution_finder_llm = ChatOllama(
-            model="deepseek-r1",
+            model="ollama/deepseek-r1",
             base_url=base_url
         )
 

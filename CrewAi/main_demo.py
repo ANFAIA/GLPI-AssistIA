@@ -14,7 +14,8 @@ def run():
         sys.exit(1)
 
     inputs = {
-        'incidencia': incidencia_texto
+        'incidencia': incidencia_texto,
+        'cat': "Redes, Hardware, Software, Cuentas de usuario, Permisos"
     }
 
     SoporteIncidenciasCrew().crew().kickoff(inputs=inputs)

@@ -1,5 +1,4 @@
-# src/my_project/config/agents.yaml
-analista_sentimieto:
+analista_sentimiento:
   role: >
     Analista de Sentimiento y Urgencia del Cliente
   goal: >
