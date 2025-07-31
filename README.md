@@ -22,23 +22,6 @@ Este `CrewAI` se conecta a herramientas externas (bases de conocimiento, sistema
       * **Agente Resolutor**: Consolida toda la información, genera un resumen enriquecido y una posible solución.
 4.  **Respuesta en GLPI**: La solución y el análisis generados se publican en el ticket de GLPI, asistiendo al técnico o respondiendo directamente al usuario.
 
-## 🚀 Estado Actual del Proyecto
-
-El proyecto se encuentra en una fase inicial de desarrollo. La arquitectura general ha sido diseñada y el enfoque actual está en la construcción de los componentes principales.
-
-### ✅ Fase 1: Cimientos y Análisis (Completada)
-
-  * **Entorno GLPI (Local)**: Se ha instalado y configurado una instancia de GLPI funcional utilizando Docker, con una base de datos MariaDB. Se han realizado pruebas locales de la configuración y los módulos.
-  * **Entorno de Desarrollo**: Se ha establecido un entorno de desarrollo para la creación de agentes.
-  * **Framework de Agentes Python**: Se ha definido el marco de trabajo básico para los agentes de IA basados en Python.
-  * **Análisis de Modelos IA**: Se ha realizado una evaluación inicial de servicios de IA y LLMs de código abierto (como `deepseek-r1`, `llama3`, etc.) utilizando **Ollama** para la ejecución local.
-
-### ⏳ Fase 2: Desarrollo de la Arquitectura (En Curso)
-
-  * **Desarrollo del Servidor MCP**: Implementación del servidor basado en `FastAPI` que gestionará las comunicaciones entre GLPI, los agentes y las herramientas externas.
-  * **Implementación de Agentes (`CrewAI`)**: Desarrollo de los agentes especializados (Analista de Emociones, Categorizador, etc.).
-  * **Integración con GLPI**: Creación del plugin o *hook* en GLPI que activará el flujo de IA cuando se cree o actualice un ticket.
-
 ## ✨ Características Principales
 
   * **Resumen y Enriquecimiento de Tickets**: La IA analiza y resume el problema del usuario, añadiendo contexto técnico.
