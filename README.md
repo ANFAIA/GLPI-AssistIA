@@ -5,7 +5,8 @@ Este proyecto implementa un agente de inteligencia artificial que se integra con
 Para más información puedes visitar el Readme de la rama principal del proyecto
 
 ---
-#VERSIÓN 1 (Carpeta Old)
+# VERSIÓN 1 (Carpeta Old)
+
 **Nota**: Este prototipo está diseñado para funcionar sin credenciales reales de GLPI, usando datos simulados para demostrar la funcionalidad de generación de resúmenes con IA. 
 
 
@@ -62,7 +63,7 @@ requests==2.31.0
    ```
 
    ---
-#Versión 2 (Implementación CrewAI)
+# Versión 2 (Implementación CrewAI)
 
 Este documento detalla los pasos necesarios para configurar y ejecutar el sistema de agentes inteligentes basado en **CrewAI**. El sistema está diseñado para analizar, clasificar y proponer soluciones a incidencias de soporte técnico.
 
