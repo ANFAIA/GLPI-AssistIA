@@ -18,14 +18,15 @@ clasificar_incidencia_task:
 
 buscar_soluciones_task:
   description: >
-    Utilizando la {incidencia} original y su clasificación, buscar en todas
-    las fuentes de conocimiento disponibles (Wiki, Zabbix, historial) para
-    encontrar soluciones relevantes. Si no hay fuentes de conocimiento no inventes su contenido.
-    Si la incidencia menciona problemas de conectividad o acceso a un servicio, 
-    utiliza la herramienta de ping para verificar la disponibilidad de la URL: {url_a_verificar}.
+    Utilizando la {incidencia} y su clasificación, investiga posibles soluciones.
+    Considera usar la herramienta 'Ping Tool' con la URL {url_a_verificar} si crees que puede ayudar a diagnosticar
+    un problema de conectividad a un servicio externo.
+    Tu objetivo principal es generar un informe claro y conciso con los pasos a seguir,
+    basándote en tu conocimiento de Wikis, Zabbix y tickets históricos.
   expected_output: >
-    Un informe con el contexto y las posibles soluciones.
-    Debe incluir una sección para cada fuente de información consultada
-    y un resumen final con los pasos recomendados. Incluye el resultado
-    del ping si fue necesario.
+    Un informe de soluciones que incluya:
+    1. Un resumen del problema.
+    2. El resultado del 'Ping Tool' (solo si decidiste usarlo).
+    3. Una lista de pasos de solución recomendados basados en tu conocimiento.
   agent: buscador_soluciones
+  

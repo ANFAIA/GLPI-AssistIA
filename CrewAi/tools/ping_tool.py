@@ -1,4 +1,5 @@
 import subprocess
+import platform  # 1. Importa la librería 'platform'
 from crewai.tools import tool
 
 @tool("Ping Tool")
@@ -8,15 +9,21 @@ def ping_tool(url: str) -> str:
     tiempo de respuesta.
     """
     try:
-        # El comando '-c 4' envía 4 paquetes, es una práctica estándar.
+        # 2. Elige el parámetro correcto según el sistema operativo
+        param = '-n' if platform.system().lower() == 'windows' else '-c'
+        
+        # 3. Construye y ejecuta el comando
+        command = ['ping', param, '4', url]
+        
         result = subprocess.run(
-            ['ping', '-c', '4', url],
+            command,
             capture_output=True,
             text=True,
             check=True
         )
         return result.stdout
     except subprocess.CalledProcessError as e:
+        # Ahora el mensaje de error será más completo
         return f"Error al ejecutar el ping: {e.stderr}"
     except FileNotFoundError:
         return "Error: No se encontró el comando 'ping'. Asegúrate de que esté instalado y en tu PATH."
