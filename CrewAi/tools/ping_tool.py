@@ -1,5 +1,5 @@
 import subprocess
-import platform  # 1. Importa la librería 'platform'
+import platform 
 from crewai.tools import tool
 
 @tool("Ping Tool")

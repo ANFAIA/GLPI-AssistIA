@@ -2,23 +2,20 @@ import requests
 from crewai.tools import tool
 
 # --- CONFIGURACIÓN DE WIKI.JS ---
+WIKIJS_URL = "URL"
+WIKIJS_API_TOKEN = "INSERT_API"
 
-WIKIJS_URL = "http://localhost:8080/"
-WIKIJS_API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGkiOjIsImdycCI6MSwiaWF0IjoxNzUzOTUzNDAxLCJleHAiOjE3ODU1MTEwMDEsImF1ZCI6InVybjp3aWtpLmpzIiwiaXNzIjoidXJuOndpa2kuanMifQ.SzJGTH0U0pLSYeT_tE724H8tCLW176bZdxoWNAO9eFDcutcu4e75Da40cRheivwoc7dpta6knYbeT6PNy0XFAUhOewi0bXN2qmnUGaPsEFrQFg51-SBhyj3Hkx-7RFE6KJsOExR-_0cGSGYOCYXje8wYc9ZzxIEvlNw4ERc-lxh6OAw_g8bqXGBb3Qscw646vZlUfd2NWmPvK2-HoMmCD9VM2P1uxS25r8ReYAfajllLXAbYlIPOyNzeYAERiUENy_cuc30YgqOOU8j3oDSPHgQmh05KXmGc1l4wBi4hV1O0HavRStNsE4a2tfktsUTdstRoCNtcicvRgOUZURzIUw"
-
-@tool("Wiki.js Search Tool")
-def wiki_search_tool(search_query: str) -> str:
+@tool("Wiki.js Tool")
+def wikijs_tool(search_query: str) -> str:
     """
     Busca en la base de conocimiento de Wiki.js para encontrar páginas
     relevantes a la consulta de búsqueda.
     """
     if WIKIJS_URL == "URL_DE_TU_WIKIJS":
-        return "Error: La URL de Wiki.js no ha sido configurada. Por favor, edita el fichero tools/wiki_tool.py."
+        return "Error: La URL de Wiki.js no ha sido configurada. Por favor, edita el fichero tools/wikijs_tool.py."
 
-    # Endpoint de la API GraphQL de Wiki.js
     graphql_endpoint = f"{WIKIJS_URL}/graphql"
 
-    # Query de GraphQL para buscar páginas
     graphql_query = """
         query($query: String!) {
             pages {
@@ -49,9 +46,8 @@ def wiki_search_tool(search_query: str) -> str:
     try:
         response = requests.post(graphql_endpoint, json=payload, headers=headers)
         response.raise_for_status()
-
         data = response.json()
-        
+
         if "errors" in data:
             return f"Error en la respuesta de la API de Wiki.js: {data['errors']}"
 

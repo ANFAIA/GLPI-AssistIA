@@ -18,15 +18,14 @@ clasificar_incidencia_task:
 
 buscar_soluciones_task:
   description: >
-    Utilizando la {incidencia} y su clasificación, investiga posibles soluciones.
-    Considera usar la herramienta 'Ping Tool' con la URL {url_a_verificar} si crees que puede ayudar a diagnosticar
-    un problema de conectividad a un servicio externo.
-    Tu objetivo principal es generar un informe claro y conciso con los pasos a seguir,
-    basándote en tu conocimiento de Wikis, Zabbix y tickets históricos.
+    Tu misión es investigar y proponer una solución para la {incidencia}.
+    Para ello, tienes a tu disposición un conjunto de herramientas.
+    Revisa la lista de herramientas disponibles y utiliza la o las que consideres más relevantes para diagnosticar y resolver el problema.
+    Por ejemplo, si la incidencia trata sobre problemas de conectividad, podrías usar la herramienta de Ping. Si necesitas buscar información en la base de conocimiento, podrías usar la herramienta de Wiki.js.
+    Analiza la situación y decide qué herramientas te proporcionarán la mejor información.
   expected_output: >
-    Un informe de soluciones que incluya:
-    1. Un resumen del problema.
-    2. El resultado del 'Ping Tool' (solo si decidiste usarlo).
-    3. Una lista de pasos de solución recomendados basados en tu conocimiento.
+    Un informe completo y detallado con tus hallazgos y recomendaciones. El informe debe incluir:
+    1.  **Contexto del Problema**: Un breve resumen de la incidencia.
+    2.  **Herramientas Utilizadas y Resultados**: Una sección donde detalles qué herramientas has usado y qué información has obtenido de cada una.
+    3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir para el técnico o el usuario.
   agent: buscador_soluciones
-  

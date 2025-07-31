@@ -5,6 +5,7 @@ from langchain_community.chat_models import ChatOllama
 from tools.ping_tool import ping_tool
 from tools.wikijs_tool import wikijs_tool
 
+
 @CrewBase
 class SoporteIncidenciasCrew():
     """
@@ -20,6 +21,8 @@ class SoporteIncidenciasCrew():
         """
         base_url = "http://localhost:11434" 
 
+        # --- CORRECCIÓN AQUÍ ---
+        # Añadimos el prefijo 'ollama/' para que litellm reconozca el proveedor
         self.sentiment_analyst_llm = ChatOllama(
             model="ollama/qwen3",
             base_url=base_url
