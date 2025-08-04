@@ -1,9 +1,8 @@
-
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_community.chat_models import ChatOllama
 from tools.ping_tool import ping_tool
-from tools.wikijs_tool import wikijs_tool
+from tools.wikijs_mcp_tool import wikijs_mcp_tool 
 
 
 @CrewBase
@@ -21,8 +20,6 @@ class SoporteIncidenciasCrew():
         """
         base_url = "http://localhost:11434" 
 
-        # --- CORRECCIÓN AQUÍ ---
-        # Añadimos el prefijo 'ollama/' para que litellm reconozca el proveedor
         self.sentiment_analyst_llm = ChatOllama(
             model="ollama/qwen3",
             base_url=base_url
@@ -68,7 +65,8 @@ class SoporteIncidenciasCrew():
         return Agent(
             config=self.agents_config['buscador_soluciones'],
             llm=self.solution_finder_llm,
-            tools=[ping_tool, wikijs_tool],
+            # 2. Reemplazamos wikijs_tool por wikijs_mcp_tool
+            tools=[ping_tool, wikijs_mcp_tool],
             verbose=True
         )
 

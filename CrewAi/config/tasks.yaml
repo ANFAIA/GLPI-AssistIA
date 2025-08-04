@@ -19,13 +19,19 @@ clasificar_incidencia_task:
 buscar_soluciones_task:
   description: >
     Tu misión es investigar y proponer una solución para la {incidencia}.
-    Para ello, tienes a tu disposición un conjunto de herramientas.
-    Revisa la lista de herramientas disponibles y utiliza la o las que consideres más relevantes para diagnosticar y resolver el problema.
-    Por ejemplo, si la incidencia trata sobre problemas de conectividad, podrías usar la herramienta de Ping. Si necesitas buscar información en la base de conocimiento, podrías usar la herramienta de Wiki.js.
-    Analiza la situación y decide qué herramientas te proporcionarán la mejor información.
+    Revisa la lista de herramientas disponibles y utiliza las que necesites.
+    
+    **IMPORTANTE**: Para usar una herramienta, DEBES usar el siguiente formato EXACTO:
+    ```
+    Thought: [Aquí explicas por qué vas a usar la herramienta]
+    Action: [El nombre EXACTO de la herramienta, ej: Wiki.js Knowledge Base Tool]
+    Action Input: { "search_query": "[El término que quieres buscar]" }
+    ```
+    
+    Después de cada observación, decides si necesitas usar otra herramienta o si ya puedes dar la respuesta final.
   expected_output: >
     Un informe completo y detallado con tus hallazgos y recomendaciones. El informe debe incluir:
     1.  **Contexto del Problema**: Un breve resumen de la incidencia.
-    2.  **Herramientas Utilizadas y Resultados**: Una sección donde detalles qué herramientas has usado y qué información has obtenido de cada una.
-    3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir para el técnico o el usuario.
+    2.  **Herramientas Utilizadas y Resultados**: Detalla qué herramientas has usado y qué información has obtenido de cada una.
+    3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir.
   agent: buscador_soluciones
