@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# src/my_project/main.py
+
 import sys
 from latest_ai_development.crew import LatestAiDevelopmentCrew
 
