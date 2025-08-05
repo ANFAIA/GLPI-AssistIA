@@ -4,7 +4,6 @@ from langchain_community.chat_models import ChatOllama
 from tools.ping_tool import ping_tool
 from tools.wikijs_mcp_tool import wikijs_mcp_tool 
 
-
 @CrewBase
 class SoporteIncidenciasCrew():
     """

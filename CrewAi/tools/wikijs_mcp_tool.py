@@ -15,5 +15,3 @@ def wikijs_mcp_tool(search_query: str) -> str:
 
     except requests.exceptions.RequestException as e:
         return f"Error de comunicación con el servidor: {e}"
-    except Exception as e:
-        return f"Error inesperado en la herramienta Wiki.js: {e}"

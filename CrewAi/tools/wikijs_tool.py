@@ -1,7 +1,7 @@
 import requests
 from crewai.tools import tool
 
-# --- CONFIGURACIÓN DE WIKI.JS ---
+#Configuración
 WIKIJS_URL = "URL"
 WIKIJS_API_TOKEN = "INSERT_API"
 

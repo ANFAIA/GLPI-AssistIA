@@ -57,8 +57,3 @@ def search_wiki(search_query: str) -> str:
             output += f"{i+1}. **{title}**\n   - Descripción: {description}\n   - Ruta: /{path}\n\n"
 
         return output
-
-    except requests.exceptions.RequestException as e:
-        return f"Error de conexión: No se pudo conectar con la API de Wiki.js. Detalles: {e}"
-    except Exception as e:
-        return f"Ha ocurrido un error inesperado al procesar la búsqueda en Wiki.js: {e}"
