@@ -1,0 +1,37 @@
+analizar_sentimiento_task:
+  description: >
+    Analizar el texto de la incidencia proporcionada en la variable {incidencia}.
+    Identificar el estado emocional del usuario (frustrado, calmado, apurado, etc.)
+    y determinar el nivel de urgencia percibido.
+  expected_output: >
+    Una única etiqueta en formato cadena de texto que resuma el estado del cliente. 
+    Por ejemplo: "URGENTE", "Enfadado", "Normal". No muestres tu razonamiento.
+  agent: analista_sentimiento
+
+clasificar_incidencia_task:
+  description: >
+    Revisar el contenido de la {incidencia} y clasificar la incidencia en una de las categorías técnicas predefinidas.
+  expected_output: >
+    Una única etiqueta en formato de cadena de texto que represente la categoría de la incidencia.
+    Por ejemplo: "Redes", "Hardware" o "Software". No muestres tu razonamiento.
+  agent: clasificador_incidencias
+
+buscar_soluciones_task:
+  description: >
+    Tu misión es investigar y proponer una solución para la {incidencia}.
+    Revisa la lista de herramientas disponibles y utiliza las que necesites.
+    
+    **IMPORTANTE**: Para usar una herramienta, DEBES usar el siguiente formato EXACTO:
+    ```
+    Thought: [Aquí explicas por qué vas a usar la herramienta]
+    Action: [El nombre EXACTO de la herramienta, ej: Wiki.js Knowledge Base Tool]
+    Action Input: { "search_query": "[El término que quieres buscar]" }
+    ```
+    
+    Después de cada observación, decides si necesitas usar otra herramienta o si ya puedes dar la respuesta final.
+  expected_output: >
+    Un informe completo en formato markdown explicando tus hallazgos y recomendaciones. El informe debe incluir:
+    1.  **Contexto del Problema**: Un breve resumen de la incidencia.
+    2.  **Herramientas Utilizadas y Resultados**: Detalla qué herramientas has usado y qué información has obtenido de cada una.
+    3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir.
+  agent: buscador_soluciones
