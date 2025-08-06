@@ -1,5 +1,5 @@
 #---------------------------------------------------
-# Intento de implementación de Groq (API) - EN OBRAS
+# Intento de implementación de Groq (API) - INCOMPLETA
 #---------------------------------------------------
 import sys
 from crew_groq import SoporteIncidenciasCrewGroq 

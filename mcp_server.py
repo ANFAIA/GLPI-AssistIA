@@ -17,4 +17,4 @@ def read_root():
     return {"message": "Servidor principal funcionando"}
 
 mcp = FastApiMCP(app)
-mcp.mount()
+mcp.mount_http()
