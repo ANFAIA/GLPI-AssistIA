@@ -1,0 +1,7 @@
+crewai
+langchain
+groq
+langchain_groq
+langchain_cerebras
+python-dotenv==1.0.0
+requests==2.31.0 
