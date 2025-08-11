@@ -29,7 +29,6 @@ class SoporteIncidenciasCrewCerebras():
         """
         self.llm = ChatCerebras(
             api_key=os.environ.get("CEREBRAS_API_KEY"),
-            # --- CORRECCIÓN AQUÍ ---
             model="cerebras/llama-3.3-70b"
         )
 
