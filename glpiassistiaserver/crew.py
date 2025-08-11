@@ -1,38 +1,28 @@
+import os
+from time import time
+
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_community.chat_models import ChatOllama
-from tools.ping_tool import ping_tool
-from tools.wikijs_mcp_tool import wikijs_mcp_tool 
+from langchain_cerebras import ChatCerebras
+
+from .tools.ping_tool import ping_tool
+from .tools.wikijs_mcp_tool import wikijs_mcp_tool
 
 @CrewBase
 class SoporteIncidenciasCrew():
     """
-    Crew para gestionar y resolver incidencias de soporte técnico usando Ollama 
+    Crew para gestionar y resolver incidencias de soporte técnico usando Ollama
     con modelos especializados para cada tarea.
     """
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
-    def __init__(self):
+    def __init__(self, llm):
         """
         Inicializa el Crew definiendo los modelos LLM de Ollama que se usarán para cada agente.
         """
-        base_url = "http://localhost:11434" 
-
-        self.sentiment_analyst_llm = ChatOllama(
-            model="ollama/qwen3",
-            base_url=base_url
-        )
-
-        self.classifier_llm = ChatOllama(
-            model="ollama/deepseek-coder",
-            base_url=base_url
-        )
-
-        self.solution_finder_llm = ChatOllama(
-            model="ollama/deepseek-r1",
-            base_url=base_url
-        )
+        self.llm = llm
 
     @agent
     def analista_sentimiento(self) -> Agent:
@@ -41,7 +31,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['analista_sentimiento'],
-            llm=self.sentiment_analyst_llm,  
+            llm=self.llm,
             verbose=True
         )
 
@@ -52,7 +42,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['clasificador_incidencias'],
-            llm=self.classifier_llm,  
+            llm=self.llm,
             verbose=True
         )
 
@@ -63,7 +53,7 @@ class SoporteIncidenciasCrew():
         """
         return Agent(
             config=self.agents_config['buscador_soluciones'],
-            llm=self.solution_finder_llm,
+            llm=self.llm,
             # 2. Reemplazamos wikijs_tool por wikijs_mcp_tool
             tools=[ping_tool, wikijs_mcp_tool],
             verbose=True
@@ -97,15 +87,30 @@ class SoporteIncidenciasCrew():
         return Task(
             config=self.tasks_config['buscar_soluciones_task'],
             agent=self.buscador_soluciones(),
-            output_file='informe_soluciones.md' 
+            output_file=f'informe_soluciones-{int(time() * 1000)}.md'
         )
 
     @crew
     def crew(self) -> Crew:
         """Crea y configura el Crew de soporte de incidencias."""
         return Crew(
-            agents=self.agents, 
-            tasks=self.tasks,   
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
         )
+
+
+def build_crew():
+    if "CEREBRAS_API_KEY" in os.environ:
+        llm = ChatCerebras(
+            api_key=os.environ["CEREBRAS_API_KEY"],
+            model="cerebras/llama-3.3-70b"
+        )
+    else:
+        llm = ChatOllama(
+            model="ollama/qwen3",
+            base_url="http://localhost:11434"
+        )
+
+    return SoporteIncidenciasCrew(llm)
