@@ -44,7 +44,7 @@ El éxito del proyecto se medirá por la consecución de los siguientes objetivo
 ## 🤖 Prototipo de Agentes
 ### VERSIÓN 1 (Carpeta Old)
 
-**Nota**: Este prototipo está diseñado para funcionar sin credenciales reales de GLPI, usando datos simulados para demostrar la funcionalidad de generación de resúmenes con IA. 
+**Nota**: Este prototipo está diseñado para funcionar sin credenciales reales de GLPI, usando datos simulados para demostrar la funcionalidad de generación de resúmenes con IA.
 
 
 #### Requisitos de Software
@@ -161,7 +161,7 @@ Una vez completados los requisitos y la configuración, puedes ejecutar el siste
     python main_demo.py
     ```
 
-El script iniciará el "Crew", que procesará la incidencia de manera secuencial a través de sus agentes. Verás en la terminal el razonamiento de cada agente y el resultado final, que será un informe guardado en `informe_soluciones.md`.
+El script iniciará el "Crew", que procesará la incidencia de manera secuencial a través de sus agentes. Verás en la terminal el razonamiento de cada agente y el resultado final, que será un informe guardado en `informe_soluciones-{timestamp}.md`.
 
 #### 4\. Arquitectura de los Agentes
 

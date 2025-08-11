@@ -1,4 +1,5 @@
 import os
+from time import time
 
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
@@ -86,7 +87,7 @@ class SoporteIncidenciasCrew():
         return Task(
             config=self.tasks_config['buscar_soluciones_task'],
             agent=self.buscador_soluciones(),
-            output_file='informe_soluciones.md'
+            output_file=f'informe_soluciones-{int(time() * 1000)}.md'
         )
 
     @crew
