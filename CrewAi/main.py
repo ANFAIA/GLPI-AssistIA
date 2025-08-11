@@ -11,7 +11,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from crew import SoporteIncidenciasCrew
+from crew import build_crew
 
 
 def _load_json() -> Dict[str, Any]:
@@ -74,8 +74,9 @@ def run():
         'url_a_verificar': 'google.com',  # Poner URL del cliente
     }
 
+    crew = build_crew()
     try:
-        SoporteIncidenciasCrew().crew().kickoff(inputs=inputs)
+        crew.crew().kickoff(inputs=inputs)
     except Exception as exc:  # noqa: BLE001
         print(f"Error ejecutando el Crew: {exc}")
         sys.exit(1)
