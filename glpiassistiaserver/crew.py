@@ -6,8 +6,8 @@ from crewai.project import CrewBase, agent, crew, task
 from langchain_community.chat_models import ChatOllama
 from langchain_cerebras import ChatCerebras
 
-from tools.ping_tool import ping_tool
-from tools.wikijs_mcp_tool import wikijs_mcp_tool
+from .tools.ping_tool import ping_tool
+from .tools.wikijs_mcp_tool import wikijs_mcp_tool
 
 @CrewBase
 class SoporteIncidenciasCrew():
