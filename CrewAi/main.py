@@ -62,12 +62,6 @@ def run():
     ticket_raw = _load_json()
     ticket = _normalize_ticket_fields(ticket_raw)
 
-    try:
-        with open('incidencia_guardada.json', 'w', encoding='utf-8') as f:
-            json.dump(ticket_raw, f, ensure_ascii=False, indent=4)
-    except Exception as exc:  # noqa: BLE001
-        print(f"Aviso: No se pudo guardar 'incidencia_guardada.json': {exc}")
-
     numero_str = f"#{ticket['numero']} - " if str(ticket.get('numero', '')).strip() else ""
     incidencia_texto = (
         f"TICKET {numero_str}TÍTULO: {ticket.get('titulo', '')}\n\n"
