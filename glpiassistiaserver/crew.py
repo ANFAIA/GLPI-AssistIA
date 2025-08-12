@@ -108,7 +108,7 @@ def build_crew():
             api_key=os.environ["CEREBRAS_API_KEY"],
             model="cerebras/llama-3.3-70b"
         )
-    if "GROQ_API_KEY" in os.environ:
+    elif "GROQ_API_KEY" in os.environ:
         print("---EMPLEANDO API DE GROQ---")
         llm = ChatGroq(
             api_key=os.environ["GROQ_API_KEY"],
