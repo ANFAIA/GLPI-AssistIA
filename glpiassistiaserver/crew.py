@@ -4,6 +4,7 @@ from time import time
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from langchain_community.chat_models import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_cerebras import ChatCerebras
 
 from .tools.ping_tool import ping_tool
@@ -54,7 +55,6 @@ class SoporteIncidenciasCrew():
         return Agent(
             config=self.agents_config['buscador_soluciones'],
             llm=self.llm,
-            # 2. Reemplazamos wikijs_tool por wikijs_mcp_tool
             tools=[ping_tool, wikijs_mcp_tool],
             verbose=True
         )
@@ -103,11 +103,20 @@ class SoporteIncidenciasCrew():
 
 def build_crew():
     if "CEREBRAS_API_KEY" in os.environ:
+        print("---EMPLEANDO API DE CEREBRAS---")
         llm = ChatCerebras(
             api_key=os.environ["CEREBRAS_API_KEY"],
             model="cerebras/llama-3.3-70b"
         )
+    if "GROQ_API_KEY" in os.environ:
+        print("---EMPLEANDO API DE GROQ---")
+        llm = ChatGroq(
+            api_key=os.environ["GROQ_API_KEY"],
+            model= "groq/llama3-70b-8192"
+        )
     else:
+        print("---EMPLEANDO MODELOS LOCALES VÍA OLLAMA---")
+        print("Se recomienda el uso de un proveedor mediante API para una mayor precisión y velocidad de respuesta. Puedes configurar tu API consultando las instrucciones disponibles en la documentación.")
         llm = ChatOllama(
             model="ollama/qwen3",
             base_url="http://localhost:11434"

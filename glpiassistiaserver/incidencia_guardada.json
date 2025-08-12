@@ -1,5 +1,0 @@
-{
-    "numero": 123,
-    "titulo": "El usuario no puede acceder a la red corporativa desde su portátil",
-    "contenido": "El usuario Juan Pérez (juan.perez@empresa.com) reporta que desde esta mañana no puede conectarse a la red corporativa desde su portátil Dell Latitude 5520. El equipo muestra el mensaje \"No se puede conectar a esta red\" cuando intenta conectarse al WiFi de la oficina. El usuario confirma que la contraseña es correcta y que otros dispositivos en la misma ubicación funcionan normalmente."
-}
