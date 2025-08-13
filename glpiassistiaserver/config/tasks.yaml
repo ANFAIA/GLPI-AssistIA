@@ -19,7 +19,7 @@ clasificar_incidencia_task:
 buscar_soluciones_task:
   description: >
     Tu misión es investigar y proponer una solución para la {incidencia}.
-    Revisa la lista de herramientas disponibles y utiliza las que necesites.
+    Revisa la lista de herramientas disponibles y utiliza las que necesites. Puedes basarte en incidencias anteriores de GLPI.
     
     **IMPORTANTE**: Para usar una herramienta, DEBES usar el siguiente formato EXACTO:
     ```
@@ -34,4 +34,30 @@ buscar_soluciones_task:
     1.  **Contexto del Problema**: Un breve resumen de la incidencia.
     2.  **Herramientas Utilizadas y Resultados**: Detalla qué herramientas has usado y qué información has obtenido de cada una.
     3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir.
+    **IMPORTANTE** Este informe debe de estar incluido en la incidencia como nota interna (Sin ser visible para el usuario final) mediante glpi_tool. También deberás de hacerlo en formato markdown.
+  agent: buscador_soluciones
+
+  publicar_en_glpi_task:
+  description: >
+    Utiliza la herramienta glpi_tool para publicar el informe técnico como una nota privada en GLPI.
+    - action: 'post_private_note'
+    - ticket_id: {{id}}
+    - text: context['output']
+
+    **IMPORTANTE**: Para usar una herramienta, DEBES usar el siguiente formato EXACTO:
+    ```
+    Thought: Publicaré el informe generado
+    Action: glpi_tool
+    Action Input: {
+      "payload": {
+        "action": "post_private_note",
+        "ticket_id": {{id}},
+        "text": context['output']
+      }
+    }
+    ```
+
+    Después de la publicación, confirma que la nota se ha añadido correctamente al ticket.
+  expected_output: >
+    Nota privada publicada correctamente en GLPI con el contenido del informe técnico generado anteriormente.
   agent: buscador_soluciones

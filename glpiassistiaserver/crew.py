@@ -9,6 +9,8 @@ from langchain_cerebras import ChatCerebras
 
 from .tools.ping_tool import ping_tool
 from .tools.wikijs_mcp_tool import wikijs_mcp_tool
+from .tools.glpi_tool import glpi_tool
+
 
 @CrewBase
 class SoporteIncidenciasCrew():
@@ -55,7 +57,7 @@ class SoporteIncidenciasCrew():
         return Agent(
             config=self.agents_config['buscador_soluciones'],
             llm=self.llm,
-            tools=[ping_tool, wikijs_mcp_tool],
+            tools=[ping_tool, wikijs_mcp_tool, glpi_tool],
             verbose=True
         )
 
@@ -89,17 +91,47 @@ class SoporteIncidenciasCrew():
             agent=self.buscador_soluciones(),
             output_file=f'informe_soluciones-{int(time() * 1000)}.md'
         )
+    
+    @task
+    def publicar_en_glpi_task(self) -> Task:
+        return Task(
+            description=(
+                "Utiliza la herramienta glpi_tool para publicar el informe técnico como una nota privada en GLPI.\n"
+                "- action: 'post_private_note'\n"
+                "- ticket_id: {{id}}\n"
+                "- text: context['output']\n\n"
+                "Formato obligatorio:\n"
+                "Thought: Publicaré el informe generado\n"
+                "Action: glpi_tool\n"
+                "Action Input: {\n"
+                "  \"payload\": {\n"
+                "    \"action\": \"post_private_note\",\n"
+                "    \"ticket_id\": {{id}},\n"
+                "    \"text\": context['output']\n"
+                "  }\n"
+                "}"
+            ),
+            expected_output="Nota privada publicada correctamente en GLPI",
+            agent=self.buscador_soluciones(),
+            tools=[glpi_tool],
+            context=[self.buscar_soluciones_task()],
+            verbose=True
+        )
 
     @crew
     def crew(self) -> Crew:
         """Crea y configura el Crew de soporte de incidencias."""
         return Crew(
             agents=self.agents,
-            tasks=self.tasks,
+            tasks=[
+            self.analizar_sentimiento_task(),
+            self.clasificar_incidencia_task(),
+            self.buscar_soluciones_task(),
+            self.publicar_en_glpi_task(),
+            ],
             process=Process.sequential,
             verbose=True,
         )
-
 
 def build_crew():
     if "CEREBRAS_API_KEY" in os.environ:
@@ -121,5 +153,6 @@ def build_crew():
             model="ollama/qwen3",
             base_url="http://localhost:11434"
         )
+        
 
     return SoporteIncidenciasCrew(llm)

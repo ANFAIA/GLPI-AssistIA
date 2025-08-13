@@ -43,7 +43,7 @@ def _normalize_ticket_fields(ticket_data: Dict[str, Any]) -> Dict[str, Any]:
             if k in ticket_data and ticket_data.get(k) is not None
         ),
         "",
-    )  # noqa: E731
+    )
     numero = get_first("numero", "id", "ticket_id", "tickets_id")
     titulo = get_first("titulo", "title", "name", "subject")
     contenido = get_first("contenido", "content", "description", "body")
@@ -66,10 +66,17 @@ def run():
         f"DESCRIPCIÓN:\n{ticket.get('contenido', '')}"
     )
 
+    ticket_id = ticket_raw.get("id", ticket.get("numero"))
+    try:
+        ticket_id = int(ticket_id)
+    except Exception:
+        pass
+
     inputs = {
         "incidencia": incidencia_texto,
         "cat": "Redes, Hardware, Software, Cuentas de usuario, Permisos",
         "url_a_verificar": "google.com",
+        "id": ticket_id
     }
 
     crew = build_crew()

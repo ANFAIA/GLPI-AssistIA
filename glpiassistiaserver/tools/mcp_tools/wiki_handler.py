@@ -1,19 +1,12 @@
 import requests
-from crewai.tools import tool
 
-#Configuración
-WIKIJS_URL = "URL"
-WIKIJS_API_TOKEN = "INSERT_API"
+WIKIJS_URL = os.getenv("WIKIJS_URL")
+WIKIJS_API_TOKEN = os.getenv("WIKIJS_API_TOKEN")
 
-@tool("Wiki.js Tool")
-def wikijs_tool(search_query: str) -> str:
+def search_wiki(search_query: str) -> str:
     """
-    Busca en la base de conocimiento de Wiki.js para encontrar páginas
-    relevantes a la consulta de búsqueda.
+    Realiza una búsqueda en la base de conocimiento de Wiki.js a través de su API GraphQL.
     """
-    if WIKIJS_URL == "URL_DE_TU_WIKIJS":
-        return "Error: La URL de Wiki.js no ha sido configurada. Por favor, edita el fichero tools/wikijs_tool.py."
-
     graphql_endpoint = f"{WIKIJS_URL}/graphql"
 
     graphql_query = """
@@ -44,7 +37,7 @@ def wikijs_tool(search_query: str) -> str:
     }
 
     try:
-        response = requests.post(graphql_endpoint, json=payload, headers=headers)
+        response = requests.post(graphql_endpoint, json=payload, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
 
@@ -54,10 +47,9 @@ def wikijs_tool(search_query: str) -> str:
         search_results = data.get("data", {}).get("pages", {}).get("search", {}).get("results", [])
 
         if not search_results:
-            return f"No se encontraron resultados en Wiki.js para: '{search_query}'"
+            return f"No se encontraron resultados en la base de conocimiento para: '{search_query}'"
 
-        # Formatear los resultados
-        output = f"Resultados de la búsqueda en Wiki.js para '{search_query}':\n\n"
+        output = f"Resultados de la búsqueda en la base de conocimiento para '{search_query}':\n\n"
         for i, result in enumerate(search_results):
             title = result.get("title")
             path = result.get("path")
@@ -67,6 +59,6 @@ def wikijs_tool(search_query: str) -> str:
         return output
 
     except requests.exceptions.RequestException as e:
-        return f"Error al conectar con la API de Wiki.js: {e}"
+        return f"Error de comunicación con el servidor de Wiki.js: {e}"
     except Exception as e:
-        return f"Ha ocurrido un error inesperado: {e}"
+        return f"Ha ocurrido un error inesperado en el manejador de Wiki.js: {e}"
