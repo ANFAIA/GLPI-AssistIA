@@ -177,5 +177,14 @@ El sistema se compone de tres agentes especializados, cada uno con un modelo de 
       * **Objetivo**: Buscar soluciones y generar un informe detallado.
       * **Modelo recomendado**: **`deepseek-r1`**, por su avanzada capacidad de razonamiento para conectar el problema con las herramientas disponibles.
 
+### Versión 3 (Implementación CrewAI como paquete instalable)
+
+El proyecto usa [uv](https://docs.astral.sh/uv/getting-started/installation/) para el desarrollo.
+
+Una vez instalada la utilidad, puedes ejecutar el siguiente comando para ejecutar la interfaz de línea de comandos:
+
+```bash
+uv run glpiassistiaserver-cli
+```
 
 🧠 Documento realizado por un humano y potenciado por IA
