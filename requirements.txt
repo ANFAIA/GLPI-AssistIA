@@ -1,8 +1,0 @@
-crewai
-langchain
-groq
-langchain_groq
-langchain_cerebras
-langchain_community
-python-dotenv
-requests
