@@ -187,4 +187,10 @@ Una vez instalada la utilidad, puedes ejecutar el siguiente comando para ejecuta
 uv run glpiassistiaserver-cli
 ```
 
+Para lanzar el servidor HTTP ejecuta:
+
+```bash
+uvicorn glpiassistiaserver.webapp:app --reload
+```
+
 🧠 Documento realizado por un humano y potenciado por IA
