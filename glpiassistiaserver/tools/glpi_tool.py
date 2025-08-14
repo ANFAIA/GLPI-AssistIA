@@ -1,144 +1,146 @@
-import requests
-import re
-from difflib import SequenceMatcher
-from typing import List, Dict, Tuple, Optional
+from crewai.tools import tool
+from typing import Any, Dict
+import json
 
-# -------------------------
-# Configuración de conexión (Cambiar por datos)
-# -------------------------
-API_URL = "https://tu.glpi/api"
-APP_TOKEN = "tu_app_token"
-USER_TOKEN = "tu_user_token"
-VERIFY_SSL = True
+from .mcp_tools.glpi_handler import (
+    GlpiError as _GlpiError,
+    get_ticket_by_number as _get_ticket_by_number,
+    search_similar_tickets as _search_similar_tickets,
+    post_private_note_for_agent as _post_private_note_for_agent,
+)
 
-
-# -------------------------
-# Conexión y cabeceras
-# -------------------------
-def _init_session() -> str:
-    headers = {
-        'App-Token': APP_TOKEN,
-        'Authorization': f'user_token {USER_TOKEN}'
-    }
-    r = requests.get(f"{API_URL.rstrip('/')}/initSession", headers=headers, verify=VERIFY_SSL)
-    r.raise_for_status()
-    return r.json().get('session_token')
+try:
+    from fastapi import APIRouter, HTTPException, Query
+    from pydantic import BaseModel, Field, conint
+    FASTAPI_AVAILABLE = True
+except Exception:
+    FASTAPI_AVAILABLE = False
 
 
-def _kill_session(session_token: str):
-    headers = {
-        'App-Token': APP_TOKEN,
-        'Session-Token': session_token
-    }
-    requests.get(f"{API_URL.rstrip('/')}/killSession", headers=headers, verify=VERIFY_SSL)
+@tool("glpi_tool")
+def glpi_tool(payload: dict) -> str:
+    """
+    Interactúa con GLPI a través de la capa MCP (glpi_handler).
 
+    Actions (payload["action"]):
+      - "search_similar": { "title": str, "content"?: str, "top_k"?: int<=20 }
+      - "post_private_note": { "ticket_id": int, "text": str }
+      - "ticket_by_number": { "number": str }
 
-def _headers(session_token: str) -> Dict[str, str]:
-    return {
-        'App-Token': APP_TOKEN,
-        'Session-Token': session_token,
-        'Content-Type': 'application/json'
-    }
-
-
-# -------------------------
-# Funciones GLPI
-# -------------------------
-def get_ticket_by_number(ticket_number: str) -> Optional[Dict]:
-    """Tool: Busca un ticket por número y devuelve su información completa."""
-    session_token = _init_session()
+    Devuelve JSON en string:
+      - {"ok": true, ...} en éxito
+      - {"ok": false, "error": "..."} en error
+    """
     try:
-        r = requests.get(
-            f"{API_URL.rstrip('/')}/search/Ticket",
-            headers=_headers(session_token),
-            params={
-                "criteria[0][field]": "1",  # name
-                "criteria[0][searchtype]": "contains",
-                "criteria[0][value]": str(ticket_number),
-                "forcedisplay[0]": "2",   # name
-                "forcedisplay[1]": "12"   # content
-            },
-            verify=VERIFY_SSL
+        # Manejar diferentes formatos de entrada
+        if isinstance(payload, str):
+            try:
+                payload = json.loads(payload)
+            except json.JSONDecodeError:
+                return json.dumps({"ok": False, "error": "Formato JSON inválido"}, ensure_ascii=False)
+        
+        action = payload.get("action")
+
+        if action == "search_similar":
+            items = _search_similar_tickets(
+                payload.get("title", ""),
+                payload.get("content", ""),
+                int(payload.get("top_k", 5)),
+            )
+            result = [{"ticket": t, "score": round(score, 4)} for (t, score) in items]
+            return json.dumps({"ok": True, "items": result}, ensure_ascii=False)
+
+        elif action == "post_private_note":
+            try:
+                tid = int(payload["ticket_id"])
+                text = str(payload["text"])
+                
+                # Verificar que el texto no sea literal "context['output']"
+                if text == "context['output']":
+                    return json.dumps({
+                        "ok": False, 
+                        "error": "El texto contiene 'context[\"output\"]' literal en lugar del contenido real. Verifique el contexto."
+                    }, ensure_ascii=False)
+                
+                res = _post_private_note_for_agent(tid, text)
+                return json.dumps({
+                    "ok": True, 
+                    "message": "Nota privada publicada correctamente en GLPI",
+                    "result": res
+                }, ensure_ascii=False)
+            except ValueError as e:
+                return json.dumps({
+                    "ok": False, 
+                    "error": f"Error en ticket_id: debe ser un número entero válido. Recibido: {payload.get('ticket_id')}"
+                }, ensure_ascii=False)
+
+        elif action == "ticket_by_number":
+            number = str(payload["number"])
+            ticket = _get_ticket_by_number(number)
+            return json.dumps(
+                {"ok": True, "found": ticket is not None, "ticket": ticket},
+                ensure_ascii=False,
+            )
+
+        else:
+            return json.dumps(
+                {"ok": False, "error": f"Acción no reconocida: {action}"},
+                ensure_ascii=False,
+            )
+
+    except _GlpiError as e:
+        return json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps(
+            {"ok": False, "error": f"Error inesperado: {e.__class__.__name__}: {e}"},
+            ensure_ascii=False,
         )
-        r.raise_for_status()
-        data = r.json()
-        if data.get("totalcount", 0) == 0:
-            return None
-        ticket_id = data['data'][0][0]
-        return get_ticket_by_id(ticket_id, session_token)
-    finally:
-        _kill_session(session_token)
 
 
-def get_ticket_by_id(ticket_id: int, session_token: str) -> Dict:
-    r = requests.get(f"{API_URL.rstrip('/')}/Ticket/{ticket_id}", headers=_headers(session_token), verify=VERIFY_SSL)
-    r.raise_for_status()
-    return r.json()
+# --- Endpoints HTTP (opcionales) ---
+# Usan prefijo y nombres únicos para evitar solapamiento con otros routers o funciones.
+if FASTAPI_AVAILABLE:
+    router = APIRouter(prefix="/mcp/glpi", tags=["glpi-mcp"])
 
+    class SimilarQuery(BaseModel):
+        title: str = Field(..., description="Título del ticket base")
+        content: str = Field("", description="Descripción/Contenido (opcional)")
+        top_k: conint(ge=1, le=20) = 5
 
-def search_similar_tickets(title: str, content: str, top_k: int = 5) -> List[Tuple[Dict, float]]:
-    """Tool: Busca tickets con contenido similar."""
-    session_token = _init_session()
-    try:
-        keywords = ' '.join(re.findall(r'\w{4,}', title)[:5]) or title
-        r = requests.get(
-            f"{API_URL.rstrip('/')}/search/Ticket",
-            headers=_headers(session_token),
-            params={
-                "criteria[0][field]": "1",
-                "criteria[0][searchtype]": "contains",
-                "criteria[0][value]": keywords,
-                "forcedisplay[0]": "2",
-                "forcedisplay[1]": "12"
-            },
-            verify=VERIFY_SSL
-        )
-        r.raise_for_status()
-        results = r.json().get('data', [])
-        scored = []
-        for row in results:
-            tid = row[0]
-            ticket = get_ticket_by_id(tid, session_token)
-            score = SequenceMatcher(
-                None,
-                _anonymize(title + content),
-                _anonymize(ticket.get('name', '') + ticket.get('content', ''))
-            ).ratio()
-            scored.append((ticket, score))
-        scored.sort(key=lambda x: x[1], reverse=True)
-        return scored[:top_k]
-    finally:
-        _kill_session(session_token)
+    class NoteInput(BaseModel):
+        ticket_id: int = Field(..., ge=1)
+        text: str = Field(..., min_length=1, max_length=65535)
 
+    @router.get("/ticket_by_number")
+    def glpi_http_ticket_by_number(number: str = Query(..., min_length=1)) -> Dict[str, Any]:
+        """MCP HTTP: Busca un ticket por número/nombre y devuelve el objeto GLPI."""
+        try:
+            ticket = _get_ticket_by_number(number)
+            return {"found": ticket is not None, "ticket": ticket}
+        except _GlpiError as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error inesperado: {e}")
 
-def post_private_note_for_agent(ticket_id: int, text: str) -> Dict:
-    """Tool: Publica una nota privada (followup) en un ticket."""
-    session_token = _init_session()
-    try:
-        payload = {
-            "input": {
-                "tickets_id": ticket_id,
-                "is_private": 1,
-                "content": text
-            }
-        }
-        r = requests.post(
-            f"{API_URL.rstrip('/')}/Ticket/{ticket_id}/TicketFollowup",
-            headers=_headers(session_token),
-            json=payload,
-            verify=VERIFY_SSL
-        )
-        r.raise_for_status()
-        return r.json()
-    finally:
-        _kill_session(session_token)
+    @router.post("/search_similar")
+    def glpi_http_search_similar(payload: SimilarQuery) -> Dict[str, Any]:
+        """MCP HTTP: Busca incidencias similares y devuelve top_k con score."""
+        try:
+            items = _search_similar_tickets(payload.title, payload.content, payload.top_k)
+            result = [{"ticket": t, "score": round(score, 4)} for (t, score) in items]
+            return {"items": result}
+        except _GlpiError as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error inesperado: {e}")
 
-
-# -------------------------
-# Eliminación de datos sensibles
-# -------------------------
-def _anonymize(text: str) -> str:
-    text = re.sub(r'[\w\.-]+@[\w\.-]+\.\w+', '[EMAIL]', text)
-    text = re.sub(r'\b(?:\d{1,3}\.){3}\d{1,3}\b', '[IP]', text)
-    text = re.sub(r'\b\d{5,}\b', '[NUM]', text)
-    return text
+    @router.post("/post_private_note")
+    def glpi_http_post_private_note(payload: NoteInput) -> Dict[str, Any]:
+        """MCP HTTP: Añade una nota privada con posibles soluciones."""
+        try:
+            res = _post_private_note_for_agent(payload.ticket_id, payload.text)
+            return {"ok": True, "result": res}
+        except _GlpiError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error inesperado: {e}")

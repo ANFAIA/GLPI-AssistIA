@@ -1,0 +1,13 @@
+crewai
+langchain
+groq
+langchain_groq
+fastapi
+langchain_cerebras
+langchain_community
+python-dotenv
+requests
+json
+sys
+os
+time
