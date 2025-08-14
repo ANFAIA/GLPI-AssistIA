@@ -11,10 +11,11 @@ dependencies = [
     "langchain-cerebras>=0.5.0",
     "langchain-community>=0.3.27",
     "langchain-groq>=0.3.7",
+    "fastapi>=0.115.0",         
     "python-dotenv>=1.1.1",
     "requests>=2.32.4",
     "starlette>=0.47.2",
-    "uvicorn>=0.35.0",
+    "uvicorn>=0.35.0",                     
 ]
 
 [project.scripts]
