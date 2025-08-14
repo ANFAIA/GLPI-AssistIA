@@ -131,5 +131,20 @@ WIKIJS_API_TOKEN=tu_token
 
 El servidor validará el evento, invocará MCP y publicará el resultado en el ticket.
 
+### Versión 3 (Implementación CrewAI como paquete instalable)
+
+El proyecto usa [uv](https://docs.astral.sh/uv/getting-started/installation/) para el desarrollo.
+
+Una vez instalada la utilidad, puedes ejecutar el siguiente comando para ejecutar la interfaz de línea de comandos:
+
+```bash
+uv run glpiassistiaserver-cli
+```
+
+Para lanzar el servidor HTTP ejecuta:
+
+```bash
+uvicorn glpiassistiaserver.webapp:app --reload
+```
 
 🧠 Documento realizado por un humano y potenciado por IA

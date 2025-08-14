@@ -1,0 +1,29 @@
+[project]
+name = "glpiassistiaserver"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "crewai>=0.157.0",
+    "groq>=0.31.0",
+    "langchain>=0.3.27",
+    "langchain-cerebras>=0.5.0",
+    "langchain-community>=0.3.27",
+    "langchain-groq>=0.3.7",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.4",
+    "starlette>=0.47.2",
+    "uvicorn>=0.35.0",
+]
+
+[project.scripts]
+glpiassistiaserver-cli = "glpiassistiaserver.__main__:run"
+
+[build-system]
+requires = ["uv_build>=0.8.9,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "glpiassistiaserver"
+module-root = ""
