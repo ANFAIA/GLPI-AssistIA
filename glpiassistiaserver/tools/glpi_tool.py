@@ -32,6 +32,13 @@ def glpi_tool(payload: dict) -> str:
       - {"ok": false, "error": "..."} en error
     """
     try:
+        # Manejar diferentes formatos de entrada
+        if isinstance(payload, str):
+            try:
+                payload = json.loads(payload)
+            except json.JSONDecodeError:
+                return json.dumps({"ok": False, "error": "Formato JSON inválido"}, ensure_ascii=False)
+        
         action = payload.get("action")
 
         if action == "search_similar":
@@ -44,10 +51,28 @@ def glpi_tool(payload: dict) -> str:
             return json.dumps({"ok": True, "items": result}, ensure_ascii=False)
 
         elif action == "post_private_note":
-            tid = int(payload["ticket_id"])
-            text = str(payload["text"])
-            res = _post_private_note_for_agent(tid, text)
-            return json.dumps({"ok": True, "result": res}, ensure_ascii=False)
+            try:
+                tid = int(payload["ticket_id"])
+                text = str(payload["text"])
+                
+                # Verificar que el texto no sea literal "context['output']"
+                if text == "context['output']":
+                    return json.dumps({
+                        "ok": False, 
+                        "error": "El texto contiene 'context[\"output\"]' literal en lugar del contenido real. Verifique el contexto."
+                    }, ensure_ascii=False)
+                
+                res = _post_private_note_for_agent(tid, text)
+                return json.dumps({
+                    "ok": True, 
+                    "message": "Nota privada publicada correctamente en GLPI",
+                    "result": res
+                }, ensure_ascii=False)
+            except ValueError as e:
+                return json.dumps({
+                    "ok": False, 
+                    "error": f"Error en ticket_id: debe ser un número entero válido. Recibido: {payload.get('ticket_id')}"
+                }, ensure_ascii=False)
 
         elif action == "ticket_by_number":
             number = str(payload["number"])

@@ -4,6 +4,13 @@ import requests
 from difflib import SequenceMatcher
 from typing import Dict, List, Tuple, Optional
 
+# Cargar variables de entorno desde .env
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 API_URL = os.getenv("GLPI_API_URL")
 APP_TOKEN = os.getenv("GLPI_APP_TOKEN")
 USER_TOKEN = os.getenv("GLPI_USER_TOKEN")
@@ -11,6 +18,15 @@ VERIFY_SSL = os.getenv("GLPI_VERIFY_SSL", "true").lower() in ("1", "true", "yes"
 
 class GlpiError(Exception):
     """Error de integración con GLPI."""
+
+def _check_cfg():
+    """Verifica que las variables de configuración de GLPI estén definidas."""
+    if not API_URL:
+        raise GlpiError("GLPI_API_URL no está definida")
+    if not APP_TOKEN:
+        raise GlpiError("GLPI_APP_TOKEN no está definida")
+    if not USER_TOKEN:
+        raise GlpiError("GLPI_USER_TOKEN no está definida")
 
 def _init_session() -> str:
     _check_cfg()
@@ -111,8 +127,10 @@ def post_private_note_for_agent(ticket_id: int, text: str) -> Dict:
     session_token = _init_session()
     try:
         payload = {"input": {"tickets_id": ticket_id, "is_private": 1, "content": text}}
+        # Asegurar que la URL no tenga dobles barras
+        url = f"{API_URL.rstrip('/')}/Ticket/{ticket_id}/TicketFollowup"
         r = requests.post(
-            f"{API_URL}/Ticket/{ticket_id}/TicketFollowup",
+            url,
             headers=_headers(session_token),
             json=payload,
             verify=VERIFY_SSL,

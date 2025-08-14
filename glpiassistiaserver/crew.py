@@ -99,7 +99,9 @@ class SoporteIncidenciasCrew():
                 "Utiliza la herramienta glpi_tool para publicar el informe técnico como una nota privada en GLPI.\n"
                 "- action: 'post_private_note'\n"
                 "- ticket_id: {{id}}\n"
-                "- text: context['output']\n\n"
+                "- text: El contenido del informe generado por el agente anterior\n\n"
+                "**IMPORTANTE**: Debes usar el contenido real del informe generado anteriormente. El contexto contiene el resultado de la tarea anterior.\n\n"
+                "**INTERPRETACIÓN DE RESPUESTA**: Si la herramienta devuelve {\"ok\": true, \"message\": \"Nota privada publicada correctamente en GLPI\"}, significa que la operación fue exitosa.\n\n"
                 "Formato obligatorio:\n"
                 "Thought: Publicaré el informe generado\n"
                 "Action: glpi_tool\n"
@@ -107,11 +109,11 @@ class SoporteIncidenciasCrew():
                 "  \"payload\": {\n"
                 "    \"action\": \"post_private_note\",\n"
                 "    \"ticket_id\": {{id}},\n"
-                "    \"text\": context['output']\n"
+                "    \"text\": \"[CONTENIDO DEL INFORME ANTERIOR]\"\n"
                 "  }\n"
                 "}"
             ),
-            expected_output="Nota privada publicada correctamente en GLPI",
+            expected_output="Nota privada publicada correctamente en GLPI con el contenido del informe técnico",
             agent=self.buscador_soluciones(),
             tools=[glpi_tool],
             context=[self.buscar_soluciones_task()],

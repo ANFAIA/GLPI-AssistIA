@@ -1,12 +1,9 @@
-# mcp_server.py (añade solo estas líneas)
 from fastapi import FastAPI
 from fastapi_mcp import FastApiMCP
 
-# Tu tool de Wiki existente
-from mcp_tools.wiki_handler import search_wiki
+from glpiassistiaserver.tools.mcp_tools.wiki_handler import search_wiki
 from fastapi import Query
 
-# NUEVO: importa el router GLPI
 from glpiassistiaserver.tools.glpi_tool import router as glpi_router
 
 app = FastAPI()
@@ -26,3 +23,7 @@ def read_root():
 
 mcp = FastApiMCP(app)
 mcp.mount_http()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

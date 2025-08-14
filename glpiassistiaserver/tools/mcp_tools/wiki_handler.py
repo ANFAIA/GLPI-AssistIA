@@ -1,4 +1,6 @@
 import requests
+import os
+
 
 WIKIJS_URL = os.getenv("WIKIJS_URL")
 WIKIJS_API_TOKEN = os.getenv("WIKIJS_API_TOKEN")

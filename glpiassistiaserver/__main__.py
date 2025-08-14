@@ -3,6 +3,13 @@ import os
 import json
 from typing import Any, Dict
 
+# Cargar variables de entorno desde .env
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from .crew import build_crew
 
 
