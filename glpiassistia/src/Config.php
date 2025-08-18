@@ -1,19 +1,4 @@
 ﻿<?php
-
-/**
- * -------------------------------------------------------------------------
- * Plugin GLPI AssistIA
- * -------------------------------------------------------------------------
- * Este archivo es parte de GLPI AssistIA.
- *
- * Este plugin se basa en el plugin "Example" para GLPI.
- * Modificaciones copyright (C) 2024 por ANFAIA.
- * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2024 by ANFAIA.
- * @link      https://github.com/ANFAIA/glpi_assistia
- * -------------------------------------------------------------------------
- */
-
 namespace GlpiPlugin\AssistIA;
 
 use CommonDBTM;
@@ -41,9 +26,15 @@ class Config extends CommonDBTM
 
     public static function configUpdate($input)
     {
-        $input['configuration'] = 1 - $input['configuration'];
+        $current = GlpiConfig::getConfigurationValues('plugin:AssistIA');
+        $new_values = [
+            'configuration' => isset($input['configuration']) ? (int)$input['configuration'] : (int)($current['configuration'] ?? 0),
+            'server_url'    => isset($input['server_url']) ? trim($input['server_url']) : ($current['server_url'] ?? ''),
+        ];
 
-        return $input;
+        GlpiConfig::setConfigurationValues('plugin:AssistIA', $new_values);
+
+        return array_merge($input, $new_values);
     }
 
     public function showFormExample()
@@ -55,6 +46,9 @@ class Config extends CommonDBTM
         }
 
         $my_config = GlpiConfig::getConfigurationValues('plugin:AssistIA');
+        $server_url_value = isset($my_config['server_url']) && $my_config['server_url'] !== ''
+            ? $my_config['server_url']
+            : 'http://localhost:8000/run-agent';
 
         echo "<form name='form' action=\"" . Toolbox::getItemTypeFormURL('Config') . "\" method='post'>";
         echo "<div class='center' id='tabsbody'>";
@@ -65,6 +59,12 @@ class Config extends CommonDBTM
         echo "<input type='hidden' name='config_class' value='" . __CLASS__ . "'>";
         echo "<input type='hidden' name='config_context' value='plugin:AssistIA'>";
         Dropdown::showYesNo('configuration', $my_config['configuration']);
+        echo '</td></tr>';
+
+        echo "<tr class='tab_bg_1'>";
+        echo '<td>' . __('AssistIA server URL', 'assistia') . '</td>';
+        echo "<td colspan='3'>";
+        echo "<input type='text' name='server_url' size='80' value='" . Html::cleanInputText($server_url_value) . "'>";
         echo '</td></tr>';
 
         echo "<tr class='tab_bg_2'>";

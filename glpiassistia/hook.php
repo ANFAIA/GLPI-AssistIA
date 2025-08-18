@@ -1,54 +1,49 @@
 ﻿<?php
-
-/**
- * -------------------------------------------------------------------------
- * Plugin GLPI AssistIA
- * -------------------------------------------------------------------------
- *
- * Este archivo es parte de GLPI AssistIA.
- *
- * Este plugin se basa en el plugin "Example" para GLPI.
- * Modificaciones copyright (C) 2024 por ANFAIA.
- * -------------------------------------------------------------------------
- * @link      https://github.com/ANFAIA/glpi-assistia
- * -------------------------------------------------------------------------
- */
-
-/**
- * @param Ticket
- * @return bool
- */
 function plugin_glpiassistia_trigger_ia_on_ticket($ticket) {
-    if ($ticket->getType() == 'Ticket') {
-        $ticket_id = $ticket->getID();
-        $title = isset($ticket->fields['name']) ? $ticket->fields['name'] : '';
-        $content = isset($ticket->fields['content']) ? $ticket->fields['content'] : '';
-
-        $ticket_data = array(
-            'numero'    => $ticket_id,
-            'titulo'    => $title,
-            'contenido' => $content
-        );
-
-        $json_ticket = json_encode($ticket_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        // Rutas absolutas basadas en la ubicación del plugin
-        $repo_root = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
-        $crew_dir = $repo_root . DIRECTORY_SEPARATOR . 'CrewAi';
-        $python_script_path = $crew_dir . DIRECTORY_SEPARATOR . 'main.py';
-        $log_file = $crew_dir . DIRECTORY_SEPARATOR . 'python_execution.log';
-        $python_executable = 'python3';
-
-        $escaped_json = escapeshellarg($json_ticket);
-
-        // Ejecutar el script en background, redirigiendo salida a log
-        $command = 'cd ' . escapeshellarg($crew_dir)
-                 . ' && ' . $python_executable . ' ' . escapeshellarg($python_script_path)
-                 . ' ' . $escaped_json
-                 . ' >> ' . escapeshellarg($log_file) . ' 2>&1 &';
-
-        shell_exec($command);
+    if ($ticket->getType() !== 'Ticket') {
+        return true;
     }
+
+    $ticket_id = $ticket->getID();
+    $title = isset($ticket->fields['name']) ? $ticket->fields['name'] : '';
+    $content = isset($ticket->fields['content']) ? $ticket->fields['content'] : '';
+    $requester_id = isset($ticket->fields['users_id_recipient']) ? (int)$ticket->fields['users_id_recipient'] : null;
+    $priority = isset($ticket->fields['priority']) ? (int)$ticket->fields['priority'] : null;
+    $urgency = isset($ticket->fields['urgency']) ? (int)$ticket->fields['urgency'] : null;
+    $impact = isset($ticket->fields['impact']) ? (int)$ticket->fields['impact'] : null;
+
+    $payload = array(
+        'ticket' => array(
+            'id' => $ticket_id,
+            'title' => $title,
+            'content' => $content,
+            'requester_id' => $requester_id,
+            'priority' => $priority,
+            'urgency' => $urgency,
+            'impact' => $impact,
+        ),
+        'source' => 'glpi',
+        'event' => 'ticket_created'
+    );
+
+    $config = Config::getConfigurationValues('plugin:AssistIA');
+    $server_url = isset($config['server_url']) && $config['server_url'] !== ''
+        ? $config['server_url']
+        : 'http://localhost:8000/run-agent';
+
+    $ch = curl_init($server_url);
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    $response = curl_exec($ch);
+    if ($response === false) {
+
+    }
+    curl_close($ch);
 
     return true;
 }

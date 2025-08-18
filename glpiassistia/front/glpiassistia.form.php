@@ -1,24 +1,5 @@
 ﻿<?php
 
-/**
- * -------------------------------------------------------------------------
- * Plugin GLPI AssistIA
- * -------------------------------------------------------------------------
- * Este archivo es parte de GLPI AssistIA.
- *
- * Este plugin se basa en el plugin "Example" para GLPI.
- * Modificaciones copyright (C) 2024 por ANFAIA.
- * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2024 by ANFAIA.
- * @link      https://github.com/ANFAIA/glpi_assistia
- * -------------------------------------------------------------------------
- */
-
-// ----------------------------------------------------------------------
-// Original Author of file:
-// Purpose of file:
-// ----------------------------------------------------------------------
-
 use GlpiPlugin\AssistIA\AssistIA;
 
 include('../../../inc/includes.php');

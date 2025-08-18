@@ -1,39 +1,5 @@
 ﻿<?php
 
-/**
- * -------------------------------------------------------------------------
- * AssistIA plugin for GLPI
- * -------------------------------------------------------------------------
- *
- * LICENSE
- *
- * This file is part of AssistIA.
- *
- * AssistIA is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * AssistIA is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with AssistIA. If not, see <http://www.gnu.org/licenses/>.
- * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2006-2022 by Example plugin team.
- * @copyright Copyright (C) 2024 by ANFAIA.
- * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
- * @link      https://github.com/ANFAIA/glpiassistia
- * -------------------------------------------------------------------------
- */
-
-// ----------------------------------------------------------------------
-// Original Author of file:
-// Purpose of file:
-// ----------------------------------------------------------------------
-
 namespace GlpiPlugin\AssistIA;
 
 use CommonDBTM;
@@ -44,7 +10,6 @@ use Log;
 use MassiveAction;
 use Session;
 
-// Class of the defined type
 class AssistIA extends CommonDBTM
 {
     public static $tags      = '[ASSISTIA_ID]';
@@ -183,7 +148,6 @@ class AssistIA extends CommonDBTM
         return 1;
     }
 
-    // Hook done on before add item case (data from form, not altered)
     public static function pre_item_add_computer(Computer $item)
     {
         if (isset($item->input['name']) && empty($item->input['name'])) {
@@ -195,13 +159,11 @@ class AssistIA extends CommonDBTM
         }
     }
 
-    // Hook done on before add item case (data altered by object prepareInputForAdd)
     public static function post_prepareadd_computer(Computer $item)
     {
         Session::addMessageAfterRedirect('Post prepareAdd Computer Hook', true);
     }
 
-    // Hook done on add item case
     public static function item_add_computer(Computer $item)
     {
         Session::addMessageAfterRedirect('Add Computer Hook, ID=' . $item->getID(), true);
@@ -247,53 +209,6 @@ class AssistIA extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        switch ($item->getType()) {
-            case 'Phone':
-                echo __('Plugin AssistIA on Phone', 'assistia');
-                break;
-
-            case 'Central':
-                echo __('Plugin central action', 'assistia');
-                break;
-
-            case 'Preference':
-                // Complete form display
-                $data = plugin_version_assistia();
-
-                echo "<form action='Where to post form'>";
-                echo "<table class='tab_cadre_fixe'>";
-                echo "<tr><th colspan='3'>" . $data['name'] . ' - ' . $data['version'];
-                echo '</th></tr>';
-
-                echo "<tr class='tab_bg_1'><td>Name of the pref</td>";
-                echo '<td>Input to set the pref</td>';
-
-                echo "<td><input class='submit' type='submit' name='submit' value='submit'></td>";
-                echo '</tr>';
-
-                echo '</table>';
-                echo '</form>';
-                break;
-
-            case 'Notification':
-                echo __('Plugin mailing action', 'assistia');
-                break;
-
-            case 'ComputerDisk':
-            case 'Supplier':
-                if ($tabnum == 1) {
-                    echo __('First tab of Plugin assistia', 'assistia');
-                } else {
-                    echo __('Second tab of Plugin assistia', 'assistia');
-                }
-                break;
-
-            default:
-                //TRANS: %1$s is a class name, %2$d is an item ID
-                printf(__('Plugin assistia CLASS=%1$s id=%2$d', 'assistia'), $item->getType(), $item->getField('id'));
-                break;
-        }
-
         return true;
     }
 
@@ -310,13 +225,9 @@ class AssistIA extends CommonDBTM
         return '';
     }
 
-    // Parm contains begin, end and who
-    // Create data to be displayed in the planning of $parm["who"] or $parm["who_group"] between $parm["begin"] and $parm["end"]
     public static function populatePlanning($parm)
     {
-        // Add items in the output array
-        // Items need to have an unique index beginning by the begin date of the item to display
-        // needed to be correcly displayed
+
         $output                = [];
         $key                   = $parm['begin'] . '$$$' . 'plugin_assistia1';
         $output[$key]['begin'] = date('Y-m-d 17:00:00');
