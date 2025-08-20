@@ -1,25 +1,10 @@
 ﻿<?php
 
-/**
- * -------------------------------------------------------------------------
- * Plugin GLPI AssistIA
- * -------------------------------------------------------------------------
- * Este archivo es parte de GLPI AssistIA.
- *
- * Este plugin se basa en el plugin "Example" para GLPI.
- * Modificaciones copyright (C) 2024 por ANFAIA.
- * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2024 by ANFAIA.
- * @link      https://github.com/ANFAIA/glpi_assistia
- * -------------------------------------------------------------------------
- */
-
 namespace GlpiPlugin\AssistIA;
 
 use CommonDBTM;
 use CommonGLPI;
 use Config as GlpiConfig;
-use Dropdown;
 use Html;
 use Session;
 use Toolbox;
@@ -32,57 +17,147 @@ class Config extends CommonDBTM
     {
         if (!$withtemplate) {
             if ($item->getType() == 'Config') {
-                return __('AssistIA plugin');
+                return __('AssistIA Plugin', 'glpiassistia');
             }
         }
-
         return '';
     }
 
     public static function configUpdate($input)
     {
-        $input['configuration'] = 1 - $input['configuration'];
+        $current = GlpiConfig::getConfigurationValues('plugin:AssistIA');
+        
+        $server_url = isset($input['server_url']) ? trim($input['server_url']) : '';
+        
+        // Validar URL
+        if (!empty($server_url)) {
+            if (!filter_var($server_url, FILTER_VALIDATE_URL)) {
+                Session::addMessageAfterRedirect(
+                    __('URL del servidor inválida', 'glpiassistia'), 
+                    false, 
+                    ERROR
+                );
+                return false;
+            }
+        }
 
-        return $input;
+        $new_values = [
+            'server_url' => $server_url,
+            'enabled' => isset($input['enabled']) ? (int)$input['enabled'] : 0,
+            'timeout' => isset($input['timeout']) ? max(1, min(60, (int)$input['timeout'])) : 10,
+        ];
+
+        GlpiConfig::setConfigurationValues('plugin:AssistIA', $new_values);
+
+        Session::addMessageAfterRedirect(
+            __('Configuración guardada exitosamente', 'glpiassistia'), 
+            false, 
+            INFO
+        );
+
+        return true;
     }
 
-    public function showFormExample()
+    public function showFormConfig()
     {
-        global $CFG_GLPI;
-
         if (!Session::haveRight('config', UPDATE)) {
             return false;
         }
 
-        $my_config = GlpiConfig::getConfigurationValues('plugin:AssistIA');
+        $config = GlpiConfig::getConfigurationValues('plugin:AssistIA');
+        $server_url = $config['server_url'] ?? '';
+        $enabled = $config['enabled'] ?? 0;
+        $timeout = $config['timeout'] ?? 10;
 
         echo "<form name='form' action=\"" . Toolbox::getItemTypeFormURL('Config') . "\" method='post'>";
         echo "<div class='center' id='tabsbody'>";
         echo "<table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='4'>" . __('AssistIA setup') . '</th></tr>';
-        echo '<td >' . __('My boolean choice :') . '</td>';
-        echo "<td colspan='3'>";
+        
+        echo "<tr><th colspan='2'>" . __('Configuración AssistIA', 'glpiassistia') . '</th></tr>';
+        
+        // Campo para habilitar/deshabilitar el plugin
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Habilitar AssistIA', 'glpiassistia') . "</td>";
+        echo "<td>";
         echo "<input type='hidden' name='config_class' value='" . __CLASS__ . "'>";
         echo "<input type='hidden' name='config_context' value='plugin:AssistIA'>";
-        Dropdown::showYesNo('configuration', $my_config['configuration']);
-        echo '</td></tr>';
+        \Dropdown::showYesNo('enabled', $enabled);
+        echo "</td></tr>";
+        
+        // Campo URL del servidor
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('URL del servidor AssistIA', 'glpiassistia') . "</td>";
+        echo "<td>";
+        echo "<input type='url' name='server_url' size='80' value='" . 
+             Html::cleanInputText($server_url) . "' placeholder='http://localhost:8000/api/tickets'>";
+        echo "<br><small>" . __('Ejemplo: http://servidor.com:8000/api/tickets', 'glpiassistia') . "</small>";
+        echo "</td></tr>";
+        
+        // Campo timeout
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Timeout de conexión (segundos)', 'glpiassistia') . "</td>";
+        echo "<td>";
+        echo "<input type='number' name='timeout' min='1' max='60' value='$timeout'>";
+        echo "<br><small>" . __('Tiempo máximo de espera para la conexión (1-60 segundos)', 'glpiassistia') . "</small>";
+        echo "</td></tr>";
+
+        // Botón de prueba de conexión
+        echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2' class='center'>";
+        if (!empty($server_url)) {
+            echo "<button type='button' class='btn btn-info' onclick='testAssistIAConnection()'>";
+            echo __('Probar conexión', 'glpiassistia') . "</button>&nbsp;";
+        }
+        echo "</td></tr>";
 
         echo "<tr class='tab_bg_2'>";
-        echo "<td colspan='4' class='center'>";
-        echo "<input type='submit' name='update' class='submit' value=\"" . _sx('button', 'Save') . '">';
-        echo '</td></tr>';
+        echo "<td colspan='2' class='center'>";
+        echo "<input type='submit' name='update' class='btn btn-primary' value=\"" . 
+             _sx('button', 'Guardar') . '">';
+        echo "</td></tr>";
 
-        echo '</table></div>';
+        echo "</table></div>";
         Html::closeForm();
+
+        // JavaScript para prueba de conexión
+        if (!empty($server_url)) {
+            echo "<script>
+            function testAssistIAConnection() {
+                const url = '" . Html::cleanInputText($server_url) . "';
+                const testData = {
+                    id: 0,
+                    title: 'Test de conexión',
+                    description: 'Esta es una prueba de conexión desde GLPI AssistIA'
+                };
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('✅ Conexión exitosa con el servidor AssistIA');
+                    } else {
+                        alert('⚠️ Error de conexión: HTTP ' + response.status);
+                    }
+                })
+                .catch(error => {
+                    alert('❌ Error de conexión: ' + error.message);
+                });
+            }
+            </script>";
+        }
     }
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == 'Config') {
             $config = new self();
-            $config->showFormExample();
+            $config->showFormConfig();
         }
+        return true;
     }
 }
-
-

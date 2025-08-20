@@ -1,49 +1,37 @@
 ﻿<?php
 
-/**
- * -------------------------------------------------------------------------
- * Plugin GLPI AssistIA
- * -------------------------------------------------------------------------
- * Este archivo es parte de GLPI AssistIA.
- *
- * Este plugin se basa en el plugin "Example" para GLPI.
- * Modificaciones copyright (C) 2024 por ANFAIA.
- * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2024 by ANFAIA.
- * @link      https://github.com/ANFAIA/glpi_assistia
- * -------------------------------------------------------------------------
- */
-
 function plugin_init_glpiassistia()
 {
-    global $PLUGIN_HOOKS, $LANG;
+    global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS['csrf_compliant']['glpiassistia'] = true;
     $PLUGIN_HOOKS['change_profile']['glpiassistia'] = 'plugin_glpiassistia_change_profile';
     $PLUGIN_HOOKS['post_init']['glpiassistia'] = 'plugin_glpiassistia_postinit';
 
-    // Add hook for ticket creation
+    // Hook para capturar tickets al momento de crearlos
     $PLUGIN_HOOKS['item_add']['glpiassistia'] = [
         'Ticket' => 'plugin_glpiassistia_trigger_ia_on_ticket'
     ];
 
-    // Add menu entry
+    // Menú del plugin
     $PLUGIN_HOOKS['menu_toadd']['glpiassistia'] = [
-        'plugins' => 'GlpiPlugin\AssistIA\AssistIA'
+        'config' => 'GlpiPlugin\AssistIA\Config'
     ];
 
-    // Add specific tabs
-    $PLUGIN_HOOKS['add_css']['glpiassistia'] = 'glpissistia.css';
+    // Pestaña de configuración en Config
+    $PLUGIN_HOOKS['config_page']['glpiassistia'] = 'front/config.php';
+
+    $PLUGIN_HOOKS['add_css']['glpiassistia'] = 'glpiassistia.css';
     $PLUGIN_HOOKS['add_javascript']['glpiassistia'] = 'glpiassistia.js';
 }
 
 function plugin_version_glpiassistia()
 {
     return [
-        'name'           => 'GLPI AssistIA (DEMO)',
-        'version'        => '0.1.0',
+        'name'           => 'GLPI AssistIA',
+        'version'        => '1.0.0',
         'author'         => 'ANFAIA',
-        'license'        => 'N/A',
+        'license'        => 'GPL v3+',
         'homepage'       => 'https://github.com/ANFAIA/GLPI-AssistIA',
         'requirements'   => [
             'glpi' => [
@@ -57,7 +45,7 @@ function plugin_version_glpiassistia()
 function plugin_glpiassistia_check_prerequisites()
 {
     if (version_compare(GLPI_VERSION, '10.0.0', 'lt')) {
-        echo "This plugin requires GLPI >= 10.0.0";
+        echo "Este plugin requiere GLPI >= 10.0.0";
         return false;
     }
     return true;
@@ -65,21 +53,26 @@ function plugin_glpiassistia_check_prerequisites()
 
 function plugin_glpiassistia_check_config($verbose = false)
 {
-    if (true) { // Your configuration check
+    $config = \Config::getConfigurationValues('plugin:AssistIA');
+    
+    if (isset($config['server_url']) && !empty($config['server_url'])) {
         return true;
     }
 
     if ($verbose) {
-        echo 'Installed / not configured';
+        echo 'Plugin instalado pero no configurado. Por favor, configure la URL del servidor AssistIA.';
     }
     return false;
 }
 
-function plugin_glpiassistia_install() {
-    return true;
+function plugin_glpiassistia_install()
+{
+    include_once(__DIR__ . '/install/install.php');
+    return plugin_glpi_assistia_install();
 }
 
-function plugin_glpiassistia_uninstall() {
-    return true;
+function plugin_glpiassistia_uninstall()
+{
+    include_once(__DIR__ . '/install/install.php');
+    return plugin_glpi_assistia_uninstall();
 }
-

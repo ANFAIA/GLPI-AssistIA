@@ -34,7 +34,7 @@ buscar_soluciones_task:
     1.  **Contexto del Problema**: Un breve resumen de la incidencia.
     2.  **Herramientas Utilizadas y Resultados**: Detalla qué herramientas has usado y qué información has obtenido de cada una.
     3.  **Resumen y Pasos Recomendados**: Un resumen final con una solución clara y los pasos a seguir.
-    **IMPORTANTE** Este informe debe de estar incluido en la incidencia como nota interna (Sin ser visible para el usuario final) mediante glpi_tool. También deberás de hacerlo en formato markdown.
+    **IMPORTANTE** Este informe debe de estar incluido en la incidencia como nota interna y en estilo normal (NO MARKDOWN) (Sin ser visible para el usuario final) mediante glpi_tool. También deberás de hacerlo en formato markdown.
   agent: buscador_soluciones
 
 
