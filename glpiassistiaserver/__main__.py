@@ -62,35 +62,47 @@ def _normalize_ticket_fields(ticket_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def run():
-    ticket_raw = _load_json()
-    ticket = _normalize_ticket_fields(ticket_raw)
-
-    numero_str = (
-        f"#{ticket['numero']} - " if str(ticket.get("numero", "")).strip() else ""
-    )
-    incidencia_texto = (
-        f"TICKET {numero_str}TÍTULO: {ticket.get('titulo', '')}\n\n"
-        f"DESCRIPCIÓN:\n{ticket.get('contenido', '')}"
-    )
-
-    ticket_id = ticket_raw.get("id", ticket.get("numero"))
+    """Función principal que ejecuta el crew con tracking de métricas."""
     try:
-        ticket_id = int(ticket_id)
-    except Exception:
-        pass
+        ticket_raw = _load_json()
+        ticket = _normalize_ticket_fields(ticket_raw)
 
-    inputs = {
-        "incidencia": incidencia_texto,
-        "cat": "Redes, Hardware, Software, Cuentas de usuario, Permisos",
-        "url_a_verificar": "google.com",
-        "id": ticket_id
-    }
+        numero_str = (
+            f"#{ticket['numero']} - " if str(ticket.get("numero", "")).strip() else ""
+        )
+        incidencia_texto = (
+            f"TICKET {numero_str}TÍTULO: {ticket.get('titulo', '')}\n\n"
+            f"DESCRIPCIÓN:\n{ticket.get('contenido', '')}"
+        )
 
-    crew = build_crew()
-    try:
-        crew.crew().kickoff(inputs=inputs)
+        ticket_id = ticket_raw.get("id", ticket.get("numero"))
+        try:
+            ticket_id = int(ticket_id)
+        except Exception:
+            pass
+
+        inputs = {
+            "incidencia": incidencia_texto,
+            "cat": "Redes, Hardware, Software, Cuentas de usuario, Permisos",
+            "url_a_verificar": "google.com",
+            "id": ticket_id
+        }
+
+        # Construir el crew
+        crew_instance = build_crew()
+        
+        # Ejecutar con tracking completo
+        result = crew_instance.execute_with_tracking(inputs)
+        
+        print(f"\n Procesamiento completado exitosamente para el ticket #{ticket_id}")
+        
+        return result
+        
+    except KeyboardInterrupt:
+        print("\nProcesamiento interrumpido por el usuario")
+        sys.exit(1)
     except Exception as exc:
-        print(f"Error ejecutando el Crew: {exc}")
+        print(f" Error ejecutando el Crew: {exc}")
         sys.exit(1)
 
 
