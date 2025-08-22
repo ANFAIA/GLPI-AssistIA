@@ -27,9 +27,7 @@ def run_crew(data, job_id):
 
         print(f"[GLPI-WEBAPP/CLI] Job {job_id} -> python -m glpiassistiaserver '{cli_arg}'")
         import subprocess
-        # Hereda el entorno del usuario (igual que a mano)
         env = os.environ.copy()
-        # IMPORTANTE: sin capturar stdout/stderr para ver los logs reales del módulo
         proc = subprocess.run(
             [sys.executable, "-m", "glpiassistiaserver", cli_arg],
             env=env,

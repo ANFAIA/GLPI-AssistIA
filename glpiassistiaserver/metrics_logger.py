@@ -94,7 +94,7 @@ Timestamp: {metrics.timestamp}
             metrics.client_frustration,
             metrics.total_tokens,
             '|'.join(metrics.tools_used), 
-            '|'.join(metrics.agents_used), # <-- ¡Corregido aquí!
+            '|'.join(metrics.agents_used),
             metrics.processing_time,
             metrics.success,
             metrics.error_message or ''
@@ -104,7 +104,6 @@ Timestamp: {metrics.timestamp}
             writer = csv.writer(f)
             writer.writerow(row)
     
-# Instancia global del logger
 metrics_logger = MetricsLogger()
 
 def log_crew_execution(
