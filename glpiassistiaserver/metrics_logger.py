@@ -93,8 +93,8 @@ Timestamp: {metrics.timestamp}
             metrics.model,
             metrics.client_frustration,
             metrics.total_tokens,
-            '|'.join(metrics.tools_used),  # Separar con | para evitar problemas con comas
-            '|'.join(metrics.agents_used),
+            '|'.join(metrics.tools_used), 
+            '|'.join(metrics.agents_used), # <-- ¡Corregido aquí!
             metrics.processing_time,
             metrics.success,
             metrics.error_message or ''
@@ -135,4 +135,3 @@ def log_crew_execution(
     )
     
     metrics_logger.log_metrics(metrics)
-

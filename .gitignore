@@ -1,2 +1,5 @@
 informe_soluciones*.md
 .env
+looptest.py
+*.csv
+*.pyc

@@ -74,6 +74,7 @@ class SoporteIncidenciasCrew():
         self.llm = llm
         self.provider = provider
         self.model = model
+        # El tracker se crea, pero las listas se llenarán en execute_with_tracking
         self.execution_tracker = CrewExecutionTracker()
 
     @agent
@@ -81,7 +82,6 @@ class SoporteIncidenciasCrew():
         """
         Define el agente que analiza el sentimiento y la urgencia de la incidencia.
         """
-        self.execution_tracker.track_agent_usage("analista_sentimiento")
         return Agent(
             config=self.agents_config['analista_sentimiento'],
             llm=self.llm,
@@ -93,7 +93,6 @@ class SoporteIncidenciasCrew():
         """
         Define el agente que clasifica la incidencia en una categoría técnica.
         """
-        self.execution_tracker.track_agent_usage("clasificador_incidencias")
         return Agent(
             config=self.agents_config['clasificador_incidencias'],
             llm=self.llm,
@@ -105,13 +104,7 @@ class SoporteIncidenciasCrew():
         """
         Define el agente que busca soluciones en la base de conocimiento.
         """
-        self.execution_tracker.track_agent_usage("buscador_soluciones")
-        
-        # Trackear las herramientas que este agente puede usar
-        for tool in [ping_tool, wikijs_mcp_tool, glpi_tool]:
-            tool_name = getattr(tool, 'name', str(tool))
-            self.execution_tracker.track_tool_usage(tool_name)
-        
+        # Las herramientas se definen aquí, pero se capturarán en el método de ejecución
         return Agent(
             config=self.agents_config['buscador_soluciones'],
             llm=self.llm,
@@ -197,9 +190,23 @@ class SoporteIncidenciasCrew():
         """Ejecuta el crew con tracking completo de métricas."""
         ticket_id = inputs.get('id', 'unknown')
         
-        # Iniciar tracking
+        # Iniciar tracking y construir el crew
         self.execution_tracker.start_tracking()
+        crew_instance = self.crew()
+
+        # Recopilar la lista de agentes y herramientas una vez que el crew está definido
+        agents_used = [agent.role for agent in crew_instance.agents]
+        tools_used = []
+        for agent_obj in crew_instance.agents:
+            if hasattr(agent_obj, 'tools'):
+                tools_used.extend([tool.name for tool in agent_obj.tools])
         
+        # Actualizar el tracker con la información real del crew
+        for agent_name in set(agents_used):
+            self.execution_tracker.track_agent_usage(agent_name)
+        for tool_name in set(tools_used):
+            self.execution_tracker.track_tool_usage(tool_name)
+            
         try:
             print(f"\n Iniciando procesamiento del ticket #{ticket_id}")
             print(f" Proveedor: {self.provider}")
@@ -207,7 +214,7 @@ class SoporteIncidenciasCrew():
             print("=" * 50)
             
             # Ejecutar el crew
-            result = self.crew().kickoff(inputs=inputs)
+            result = crew_instance.kickoff(inputs=inputs)
             
             # Obtener información de tokens
             token_usage = getattr(result, 'token_usage', None)
