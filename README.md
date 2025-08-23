@@ -5,12 +5,12 @@
 Este proyecto busca modernizar y automatizar la plataforma open-source GLPI. La meta es integrar un sistema de agentes de IA para automatizar las respuestas del soporte técnico, optimizar los flujos de trabajo y enriquecer la experiencia de usuario, especialmente para personas sin perfil técnico.
 
 ## 🏛️ Arquitectura y Visión General
+
 El núcleo del sistema está diseñado en torno a un flujo de trabajo que se activa con la creación de un ticket en GLPI. La información del ticket es procesada por un sistema de agentes inteligentes (`CrewAI`) que colaboran para analizar, enriquecer y proponer soluciones.
 
 Este `CrewAI` se conecta a herramientas externas (bases de conocimiento, sistemas de monitorización) a través de un **Servidor MCP (Model Context Protocol)**, que actúa como un bus de datos.
 
 ### Flujo de Trabajo del Ticket
-![Diagrama de Arquitectura V3](https://raw.githubusercontent.com/ANFAIA/GLPI-AssistIA/c81ce359886bd2f5c9111d7a7446144947432ea3/docs/BigPicture%20V3.svg)
 
 1.  **Entrada en GLPI**: Un usuario o técnico crea un ticket de incidencia.
 2.  **Activación del Agente**: La incidencia se transfiere al sistema `CrewAI` para su procesamiento.
@@ -18,7 +18,7 @@ Este `CrewAI` se conecta a herramientas externas (bases de conocimiento, sistema
       * **Analista de Emociones**: Evalúa la urgencia y el estado de ánimo del usuario para priorizar el ticket.
       * **Agente Categorizador**: Clasifica la incidencia según las etiquetas predefinidas en GLPI.
       * **Agente GLPI**: Busca en el historial de GLPI incidencias similares o relacionadas para obtener contexto.
-      * **Agente Experto en \[X]**: Para cada categoría, un agente especializado consulta bases de datos externas como **Wiki.js**, **Zabbix**, etc., a través del Servidor MCP.
+      * **Agente Experto en [X]**: Para cada categoría, un agente especializado consulta bases de datos externas como **Wiki.js**, **Zabbix**, etc., a través del Servidor MCP.
       * **Agente Resolutor**: Consolida toda la información, genera un resumen enriquecido y una posible solución.
 4.  **Respuesta en GLPI**: La solución y el análisis generados se publican en el ticket de GLPI, asistiendo al técnico o respondiendo directamente al usuario.
 
@@ -40,30 +40,29 @@ El éxito del proyecto se medirá por la consecución de los siguientes objetivo
   * Reducción de más del **40%** en el tiempo promedio de resolución de incidencias.
   * Nivel de satisfacción del usuario superior a **4.0/5.0**.
 
-
 ## 🤖 Módulo de agentes (Glpi AssistIA Server)
 
-Serve como backend que:
-1. Recibe eventos de GLPI (por ejemplo, creación o actualización de tickets).
-2. Orquesta los agentes de IA a través del servidor MCP (`mcp_server.py` en la raíz).
-3. Devuelve al ticket un resumen enriquecido o solución.
+Sirve como backend que:
 
-> Nota: El servidor MCP está en la raíz del repo (`mcp_server.py`). Esta versión 3 sustituye a los prototipos previos (V1/V2), que ya no están en el repositorio.
-
---
+1.  Recibe eventos de GLPI (por ejemplo, creación o actualización de tickets).
+2.  Orquesta los agentes de IA a través del servidor MCP (`mcp_server.py` en la raíz).
+3.  Devuelve al ticket un resumen enriquecido o solución.
+-----
 
 ### Requisitos
-- **GLPI** versión 10.x o superior (acceso vía API).
-- **Credenciales GLPI:** `GLPI_URL`, `GLPI_APP_TOKEN` y `GLPI_USER_TOKEN`.
-- **Servidor AssistIA** (`glpiassistiaserver/`):
-  - Si es **PHP**, requiere **PHP ≥ 8.1** y **Composer**.
-  - Si es **Python**, requiere **Python ≥ 3.11**.
-- **MCP (opcional pero recomendado):** `python ≥ 3.11` para ejecutar `mcp_server.py`.
-- **(Opcional)** LLM local si la orquestación usa modelos locales (por ejemplo, Ollama).
 
----
+  - **GLPI** versión 10.x o superior (acceso vía API).
+  - **Credenciales GLPI:** `GLPI_URL`, `GLPI_APP_TOKEN` y `GLPI_USER_TOKEN`.
+  - **Servidor AssistIA** (`glpiassistiaserver/`):
+      - Si es **PHP**, requiere **PHP ≥ 8.1** y **Composer**.
+      - Si es **Python**, requiere **Python ≥ 3.11**.
+  - **MCP (opcional pero recomendado):** `python ≥ 3.11` para ejecutar `mcp_server.py`.
+  - **(Opcional)** LLM local si la orquestación usa modelos locales (por ejemplo, Ollama).
+
+-----
 
 ### Variables de entorno
+
 Crea un archivo `.env` que contenga:
 
 ```env
@@ -84,54 +83,64 @@ OLLAMA_HOST=http://127.0.0.1:11434
 # Wiki.js
 WIKIJS_URL=http://localhost:8080/
 WIKIJS_API_TOKEN=tu_token
+```
 
-````
-
----
+-----
 
 ### Puesta en marcha
 
-1. **Arranca el MCP** desde la raíz del repo:
+1.  **Arranca el MCP** desde la raíz del repo:
 
-   ```bash
-   python -m pip install -r requirements.txt
-   python mcp_server.py
-   ```
+<!-- end list -->
 
-2. **Arranca el servidor AssistIA** desde `glpiassistiaserver/`:
+```bash
+uv pip install -r requirements.txt
+python mcp_server.py
+```
 
-   * **PHP (Composer):**
+2.  **Arranca el servidor AssistIA** desde `glpiassistiaserver/`:
 
-     ```bash
-     cd glpiassistiaserver
-     composer install
-     # Si hay carpeta public/:
-     php -S 127.0.0.1:8080 -t public
-     ```
-   * **Python (FastAPI / Flask, etc.):**
+<!-- end list -->
 
-     ```bash
-     cd glpiassistiaserver
-     python -m pip install -r requirements.txt
-     uvicorn app:app --host 0.0.0.0 --port 8080 --reload
-     ```
+  * **PHP (Composer):**
 
----
+    ```bash
+    cd glpiassistiaserver
+    composer install
+    # Si hay carpeta public/:
+    php -S 127.0.0.1:8080 -t public
+    ```
 
-### Integración con GLPI (EN OBRAS)
+  * **Python (FastAPI / Starlette):**
 
-1. En GLPI → Configuración → API:
+    ```bash
+    cd glpiassistiaserver
+    uv pip install -r requirements.txt
+    uvicorn glpiassistiaserver.webapp:app --host 0.0.0.0 --port 8080 --reload
+    ```
 
-   * Habilita la API y genera los tokens.
-2. Configura un **webhook** (o tarea equivalente) que apunte al endpoint del servidor AssistIA, por ejemplo:
+-----
 
-   ```
-   POST http://TU_ASSISTIA:8080/webhook/glpi
-   ```
+### Integración con GLPI - GLPI Tool
+
+Esta herramienta permite a CrewAI buscar resultados en incidencias anteriores y publicar los resultados del informe como nota interna. Para activarlo:
+
+1.  En GLPI → Configuración → API:
+
+      * Habilita la API y genera los tokens.
+
+2.  Configura un **webhook** (o tarea equivalente) que apunte al endpoint del servidor AssistIA, por ejemplo:
+
+    ```
+    POST http://TU_ASSISTIA:8080/webhook/glpi
+    ```
 
 El servidor validará el evento, invocará MCP y publicará el resultado en el ticket.
 
-### Versión 3 (Implementación CrewAI como paquete instalable)
+
+-----
+
+### Implementación CrewAI como paquete instalable
 
 El proyecto usa [uv](https://docs.astral.sh/uv/getting-started/installation/) para el desarrollo.
 
@@ -146,5 +155,7 @@ Para lanzar el servidor HTTP ejecuta:
 ```bash
 uvicorn glpiassistiaserver.webapp:app --reload
 ```
+
+-----
 
 🧠 Documento realizado por un humano y potenciado por IA
