@@ -1,4 +1,4 @@
-from crewai.tools import tool
+﻿from crewai.tools import tool
 from typing import Any, Dict
 import json
 import traceback
@@ -37,7 +37,6 @@ def glpi_tool(payload: dict) -> str:
       - {"ok": false, "error": "mensaje"} en caso de error
     """
     try:
-        # Validar y parsear entrada
         if isinstance(payload, str):
             try:
                 payload = json.loads(payload)
@@ -201,11 +200,9 @@ def _handle_ticket_by_number(payload: Dict[str, Any]) -> str:
                 "error": "Campo 'number' requerido y no puede estar vacío"
             }, ensure_ascii=False)
         
-        # Buscar ticket
         ticket = _get_ticket_by_number(str(number))
         
         if ticket:
-            # Formatear ticket para respuesta
             formatted_ticket = {
                 "id": ticket.get("id"),
                 "name": ticket.get("name", ""),
@@ -238,7 +235,6 @@ def _handle_ticket_by_number(payload: Dict[str, Any]) -> str:
         }, ensure_ascii=False)
 
 
-# --- Endpoints HTTP opcionales para FastAPI ---
 if FASTAPI_AVAILABLE:
     router = APIRouter(prefix="/mcp/glpi", tags=["glpi-mcp"])
 

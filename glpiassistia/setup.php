@@ -1,5 +1,21 @@
 ﻿<?php
 
+if (!defined('GLPI_ROOT')) {
+    define('GLPI_ROOT', dirname(dirname(dirname(__FILE__))));
+}
+
+include_once(__DIR__ . '/hook.php');
+
+spl_autoload_register(function ($class) {
+    if (strpos($class, 'GlpiPlugin\\AssistIA\\') === 0) {
+        $class_file = str_replace('GlpiPlugin\\AssistIA\\', '', $class);
+        $class_file = __DIR__ . '/src/' . $class_file . '.php';
+        if (file_exists($class_file)) {
+            require_once $class_file;
+        }
+    }
+});
+
 function plugin_init_glpiassistia()
 {
     global $PLUGIN_HOOKS;
@@ -8,17 +24,18 @@ function plugin_init_glpiassistia()
     $PLUGIN_HOOKS['change_profile']['glpiassistia'] = 'plugin_glpiassistia_change_profile';
     $PLUGIN_HOOKS['post_init']['glpiassistia'] = 'plugin_glpiassistia_postinit';
 
-    // Hook para capturar tickets al momento de crearlos
     $PLUGIN_HOOKS['item_add']['glpiassistia'] = [
         'Ticket' => 'plugin_glpiassistia_trigger_ia_on_ticket'
     ];
-
-    // Menú del plugin
-    $PLUGIN_HOOKS['menu_toadd']['glpiassistia'] = [
-        'config' => 'GlpiPlugin\AssistIA\Config'
+    
+    $PLUGIN_HOOKS['post_item_form']['glpiassistia'] = [
+        'Ticket' => 'plugin_glpiassistia_post_item_form'
     ];
 
-    // Pestaña de configuración en Config
+    $PLUGIN_HOOKS['menu_toadd']['glpiassistia'] = [
+        'config' => 'PluginGlpiassistiaConfig'
+    ];
+
     $PLUGIN_HOOKS['config_page']['glpiassistia'] = 'front/config.php';
 
     $PLUGIN_HOOKS['add_css']['glpiassistia'] = 'glpiassistia.css';
@@ -30,7 +47,7 @@ function plugin_version_glpiassistia()
     return [
         'name'           => 'GLPI AssistIA',
         'version'        => '1.0.0',
-        'author'         => 'ANFAIA',
+        'author'         => 'ANFAIA - Anxo López Rodríguez - Miguel Gonzalez (Aitire)',
         'license'        => 'GPL v3+',
         'homepage'       => 'https://github.com/ANFAIA/GLPI-AssistIA',
         'requirements'   => [

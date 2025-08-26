@@ -1,4 +1,4 @@
-import os
+﻿import os
 import csv
 from datetime import datetime
 from typing import Dict, Any, List, Optional
@@ -9,13 +9,13 @@ import time
 class CrewMetrics:
     """Clase para almacenar métricas de ejecución del crew."""
     ticket_id: str
-    provider: str  # ollama, cerebras, groq
+    provider: str
     model: str
     client_frustration: str
     total_tokens: int
     tools_used: List[str]
     agents_used: List[str]
-    processing_time: float  # en segundos
+    processing_time: float 
     timestamp: str
     success: bool
     error_message: Optional[str] = None
@@ -27,10 +27,8 @@ class MetricsLogger:
         self.log_dir = log_dir
         self.csv_file = os.path.join(log_dir, "crew_metrics.csv")
         
-        # Crear directorio de logs si no existe
         os.makedirs(log_dir, exist_ok=True)
         
-        # Inicializar archivo CSV si no existe
         self._init_csv_file()
     
     def _init_csv_file(self):
@@ -49,10 +47,8 @@ class MetricsLogger:
     def log_metrics(self, metrics: CrewMetrics):
         """Registra las métricas en formato CSV y las muestra en pantalla."""
         try:
-            # Log a consola
             self._print_to_console(metrics)
             
-            # Log a CSV
             self._log_to_csv(metrics)
             
         except Exception as e:

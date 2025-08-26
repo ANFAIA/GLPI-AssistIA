@@ -15,7 +15,6 @@ class AssistIA extends CommonDBTM
     public static $tags      = '[ASSISTIA_ID]';
     public static $rightname = 'plugin_assistia';
 
-    // Should return the localized name of the type
     public static function getTypeName($nb = 0)
     {
         return 'AssistIA Type';
@@ -233,9 +232,7 @@ class AssistIA extends CommonDBTM
         $output[$key]['begin'] = date('Y-m-d 17:00:00');
         $output[$key]['end']   = date('Y-m-d 18:00:00');
         $output[$key]['name']  = __('test planning assistia 1', 'assistia');
-        // Specify the itemtype to be able to use specific display system
         $output[$key]['itemtype'] = AssistIA::class;
-        // Set the ID using the ID of the item in the database to have unique ID
         $output[$key][getForeignKeyFieldForItemType(AssistIA::class)] = 1;
 
         return $output;
@@ -253,11 +250,9 @@ class AssistIA extends CommonDBTM
      **/
     public static function displayPlanningItem(array $val, $who, $type = '', $complete = 0)
     {
-        // $parm["type"] say begin end in or from type
-        // Add items in the items fields of the parm array
+
         switch ($type) {
             case 'in':
-                //TRANS: %1$s is the start time of a planned item, %2$s is the end
                 printf(
                     __('From %1$s to %2$s :'),
                     date('H:i', strtotime($val['begin'])),
@@ -270,12 +265,10 @@ class AssistIA extends CommonDBTM
                 break;
 
             case 'begin':
-                //TRANS: %s is the start time of a planned item
                 printf(__('Start at %s:'), date('H:i', strtotime($val['begin'])));
                 break;
 
             case 'end':
-                //TRANS: %s is the end time of a planned item
                 printf(__('End at %s:'), date('H:i', strtotime($val['end'])));
                 break;
         }
@@ -456,14 +449,11 @@ class AssistIA extends CommonDBTM
         $default = [
             'data'  => [],
             'title' => '',
-            // this property is "pretty" mandatory,
-            // as it contains the colors selected when adding widget on the grid send
-            // without it, your card will be transparent
+
             'color' => '',
         ];
         $p = array_merge($default, $params);
 
-        // you need to encapsulate your html in div.card to benefit core style
         $html = "<div class='card' style='background-color: {$p['color']};'>";
         $html .= "<h2>{$p['title']}</h2>";
         $html .= '<ul>';
@@ -498,14 +488,11 @@ class AssistIA extends CommonDBTM
     public static function cardWidgetWithoutProvider(array $params = [])
     {
         $default = [
-            // this property is "pretty" mandatory,
-            // as it contains the colors selected when adding widget on the grid send
-            // without it, your card will be transparent
+
             'color' => '',
         ];
         $p = array_merge($default, $params);
 
-        // you need to encapsulate your html in div.card to benefit core style
         $html = "<div class='card' style='background-color: {$p['color']};'>
                   static html (+optional javascript) as card is not matched with a data provider
 

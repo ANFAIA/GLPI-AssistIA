@@ -63,7 +63,7 @@ requests==2.31.0
 
 Este documento detalla los pasos necesarios para configurar y ejecutar el sistema de agentes inteligentes basado en **CrewAI**. El sistema está diseñado para analizar, clasificar y proponer soluciones a incidencias de soporte técnico.
 
-#### 1\. Requisitos Previos
+#### 1. Requisitos Previos
 
 Antes de empezar, asegúrate de tener instalado y configurado lo siguiente:
 
@@ -86,7 +86,7 @@ El motor de los agentes funciona con modelos de lenguaje ejecutados localmente a
     ```
 3.  **Inicia el servidor de Ollama**: Asegúrate de que Ollama se esté ejecutando en segundo plano. Por defecto, estará disponible en `http://localhost:11434`.
 
-#### 2\. Configuración
+#### 2. Configuración
 
 Sigue estos pasos para configurar el entorno de ejecución:
 
@@ -110,7 +110,7 @@ El `buscador_soluciones` utiliza herramientas para diagnosticar problemas.
   * **Wiki.js Tool**: Si deseas conectar el agente a una base de conocimiento de Wiki.js, debes editar el archivo `CrewAi/tools/wikijs_tool.py` y configurar las variables `WIKIJS_URL` y `WIKIJS_API_TOKEN` con tus credenciales.
   * **Ping Tool**: Si deseas que el agente realice un ping a una página, deberás de indicarlo en el campo habilitado. Por defecto está establecida una dirección genérica.
 
-#### 3\. Ejecución
+#### 3. Ejecución
 
 Una vez completados los requisitos y la configuración, puedes ejecutar el sistema de agentes.
 
@@ -122,7 +122,7 @@ Una vez completados los requisitos y la configuración, puedes ejecutar el siste
 
 El script iniciará el "Crew", que procesará la incidencia de manera secuencial a través de sus agentes. Verás en la terminal el razonamiento de cada agente y el resultado final, que será un informe guardado en `informe_soluciones-{timestamp}.md`.
 
-#### 4\. Arquitectura de los Agentes
+#### 4. Arquitectura de los Agentes
 
 El sistema se compone de tres agentes especializados, cada uno con un modelo de lenguaje recomendado para su tarea específica (En la documentación se dispone de un análisis detallado):
 

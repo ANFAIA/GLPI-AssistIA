@@ -4,7 +4,7 @@
 
 Este proyecto busca modernizar y automatizar la plataforma open-source GLPI. La meta es integrar un sistema de agentes de IA para automatizar las respuestas del soporte técnico, optimizar los flujos de trabajo y enriquecer la experiencia de usuario, especialmente para personas sin perfil técnico.
 
-## 🏛️ Arquitectura y Visión General
+## 🏗️ Arquitectura y Visión General
 El núcleo del sistema está diseñado en torno a un flujo de trabajo que se activa con la creación de un ticket en GLPI. La información del ticket es procesada por un sistema de agentes inteligentes (`CrewAI`) que colaboran para analizar, enriquecer y proponer soluciones.
 
 Este `CrewAI` se conecta a herramientas externas (bases de conocimiento, sistemas de monitorización) a través de un **Servidor MCP (Model Context Protocol)**, que actúa como un bus de datos.
@@ -18,7 +18,7 @@ Este `CrewAI` se conecta a herramientas externas (bases de conocimiento, sistema
       * **Analista de Emociones**: Evalúa la urgencia y el estado de ánimo del usuario para priorizar el ticket.
       * **Agente Categorizador**: Clasifica la incidencia según las etiquetas predefinidas en GLPI.
       * **Agente GLPI**: Busca en el historial de GLPI incidencias similares o relacionadas para obtener contexto.
-      * **Agente Experto en \[X]**: Para cada categoría, un agente especializado consulta bases de datos externas como **Wiki.js**, **Zabbix**, etc., a través del Servidor MCP.
+      * **Agente Experto en [X]**: Para cada categoría, un agente especializado consulta bases de datos externas como **Wiki.js**, **Zabbix**, etc., a través del Servidor MCP.
       * **Agente Resolutor**: Consolida toda la información, genera un resumen enriquecido y una posible solución.
 4.  **Respuesta en GLPI**: La solución y el análisis generados se publican en el ticket de GLPI, asistiendo al técnico o respondiendo directamente al usuario.
 

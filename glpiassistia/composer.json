@@ -1,6 +1,6 @@
-﻿{
+{
     "name": "glpi/glpi_assistia",
-    "description": "Plugin de asistencia con IA para GLPI",
+    "description": "Este plugin permite enviar automáticamente las incidencias creadas en GLPI a un servidor externo (GlpiassistIA Server) para procesamiento con IA",
     "type": "glpi-plugin",
     "require": {
         "php": ">=7.4"

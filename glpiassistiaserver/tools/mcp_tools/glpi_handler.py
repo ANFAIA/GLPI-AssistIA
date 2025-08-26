@@ -1,6 +1,7 @@
-import os
+﻿import os
 import re
 import requests
+import json
 import math
 from difflib import SequenceMatcher
 from typing import Dict, List, Tuple, Optional, Set
@@ -154,6 +155,15 @@ class TextSimilarity:
         
         return min(1.0, combined)
 
+def _parse_json_response(r: requests.Response):
+    """Parsea JSON y elimina BOM si aparece al inicio de la respuesta."""
+    try:
+        # Usar el texto ya decodificado por requests y quitar BOM explícitamente
+        text = r.text.lstrip('\ufeff')
+        return json.loads(text)
+    except Exception as e:
+        raise GlpiError(f"Error al parsear respuesta JSON de GLPI: {e}")
+
 def _check_cfg():
     """Verifica que las variables de configuración de GLPI estén definidas."""
     if not API_URL:
@@ -172,7 +182,7 @@ def _init_session() -> str:
         r = requests.get(f"{API_URL}/initSession", headers=headers, verify=VERIFY_SSL, timeout=20)
         r.raise_for_status()
         
-        response_data = r.json()
+        response_data = _parse_json_response(r)
         token = response_data.get("session_token")
         
         if not token:
@@ -230,7 +240,7 @@ def get_ticket_by_id(ticket_id: int, session_token: str) -> Dict:
         )
         r.raise_for_status()
         
-        ticket_data = r.json()
+        ticket_data = _parse_json_response(r)
         
         # Verificar si el ticket existe
         if not ticket_data or (isinstance(ticket_data, list) and len(ticket_data) == 0):
@@ -265,7 +275,7 @@ def get_ticket_by_number(ticket_number: str) -> Optional[Dict]:
         )
         r.raise_for_status()
         
-        data = r.json()
+        data = _parse_json_response(r)
         
         if not data or data.get("totalcount", 0) == 0:
             return None
@@ -310,7 +320,7 @@ def get_all_tickets_for_similarity(session_token: str, limit: int = 100) -> List
             )
             r.raise_for_status()
             
-            data = r.json()
+            data = _parse_json_response(r)
             
             if not data or data.get("totalcount", 0) == 0:
                 break
@@ -451,7 +461,7 @@ def post_private_note_for_agent(ticket_id: int, text: str) -> Dict:
         )
         r.raise_for_status()
         
-        response_data = r.json()
+        response_data = _parse_json_response(r)
         
         if not response_data:
             raise GlpiError("GLPI devolvió respuesta vacía al crear followup")

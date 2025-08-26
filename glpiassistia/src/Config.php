@@ -29,7 +29,6 @@ class Config extends CommonDBTM
         
         $server_url = isset($input['server_url']) ? trim($input['server_url']) : '';
         
-        // Validar URL
         if (!empty($server_url)) {
             if (!filter_var($server_url, FILTER_VALIDATE_URL)) {
                 Session::addMessageAfterRedirect(
@@ -50,7 +49,7 @@ class Config extends CommonDBTM
         GlpiConfig::setConfigurationValues('plugin:AssistIA', $new_values);
 
         Session::addMessageAfterRedirect(
-            __('Configuración guardada exitosamente', 'glpiassistia'), 
+            __('Configuración guardada con éxito', 'glpiassistia'), 
             false, 
             INFO
         );
@@ -73,11 +72,10 @@ class Config extends CommonDBTM
         echo "<div class='center' id='tabsbody'>";
         echo "<table class='tab_cadre_fixe'>";
         
-        echo "<tr><th colspan='2'>" . __('Configuración AssistIA', 'glpiassistia') . '</th></tr>';
+        echo "<tr><th colspan='2'>" . __('Configuración GLPI AssistIA', 'glpiassistia') . '</th></tr>';
         
-        // Campo para habilitar/deshabilitar el plugin
         echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Habilitar AssistIA', 'glpiassistia') . "</td>";
+        echo "<td>" . __('Habilitar GLPI AssistIA', 'glpiassistia') . "</td>";
         echo "<td>";
         echo "<input type='hidden' name='config_class' value='" . __CLASS__ . "'>";
         echo "<input type='hidden' name='config_context' value='plugin:AssistIA'>";
@@ -86,14 +84,13 @@ class Config extends CommonDBTM
         
         // Campo URL del servidor
         echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('URL del servidor AssistIA', 'glpiassistia') . "</td>";
+        echo "<td>" . __('URL del servidor AssistIA (AssistIA Server)', 'glpiassistia') . "</td>";
         echo "<td>";
         echo "<input type='url' name='server_url' size='80' value='" . 
              Html::cleanInputText($server_url) . "' placeholder='http://localhost:8000/api/tickets'>";
         echo "<br><small>" . __('Ejemplo: http://servidor.com:8000/api/tickets', 'glpiassistia') . "</small>";
         echo "</td></tr>";
         
-        // Campo timeout
         echo "<tr class='tab_bg_1'>";
         echo "<td>" . __('Timeout de conexión (segundos)', 'glpiassistia') . "</td>";
         echo "<td>";
@@ -101,7 +98,6 @@ class Config extends CommonDBTM
         echo "<br><small>" . __('Tiempo máximo de espera para la conexión (1-60 segundos)', 'glpiassistia') . "</small>";
         echo "</td></tr>";
 
-        // Botón de prueba de conexión
         echo "<tr class='tab_bg_1'>";
         echo "<td colspan='2' class='center'>";
         if (!empty($server_url)) {
@@ -119,7 +115,6 @@ class Config extends CommonDBTM
         echo "</table></div>";
         Html::closeForm();
 
-        // JavaScript para prueba de conexión
         if (!empty($server_url)) {
             echo "<script>
             function testAssistIAConnection() {
@@ -139,7 +134,7 @@ class Config extends CommonDBTM
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('✅ Conexión exitosa con el servidor AssistIA');
+                        alert('✅ Conexión establecida con GLPI AssistIA Server 🎉');
                     } else {
                         alert('⚠️ Error de conexión: HTTP ' + response.status);
                     }
