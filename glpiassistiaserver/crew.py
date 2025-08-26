@@ -1,4 +1,4 @@
-import os
+﻿import os
 import time
 from typing import List
 
@@ -12,7 +12,6 @@ from .tools.ping_tool import ping_tool
 from .tools.wikijs_mcp_tool import wikijs_mcp_tool
 from .tools.glpi_tool import glpi_tool
 
-# Importar el sistema de logging de métricas
 from .metrics_logger import log_crew_execution
 
 
@@ -74,7 +73,6 @@ class SoporteIncidenciasCrew():
         self.llm = llm
         self.provider = provider
         self.model = model
-        # El tracker se crea, pero las listas se llenarán en execute_with_tracking
         self.execution_tracker = CrewExecutionTracker()
 
     @agent
@@ -104,7 +102,6 @@ class SoporteIncidenciasCrew():
         """
         Define el agente que busca soluciones en la base de conocimiento.
         """
-        # Las herramientas se definen aquí, pero se capturarán en el método de ejecución
         return Agent(
             config=self.agents_config['buscador_soluciones'],
             llm=self.llm,
@@ -190,18 +187,15 @@ class SoporteIncidenciasCrew():
         """Ejecuta el crew con tracking completo de métricas."""
         ticket_id = inputs.get('id', 'unknown')
         
-        # Iniciar tracking y construir el crew
         self.execution_tracker.start_tracking()
         crew_instance = self.crew()
 
-        # Recopilar la lista de agentes y herramientas una vez que el crew está definido
         agents_used = [agent.role for agent in crew_instance.agents]
         tools_used = []
         for agent_obj in crew_instance.agents:
             if hasattr(agent_obj, 'tools'):
                 tools_used.extend([tool.name for tool in agent_obj.tools])
         
-        # Actualizar el tracker con la información real del crew
         for agent_name in set(agents_used):
             self.execution_tracker.track_agent_usage(agent_name)
         for tool_name in set(tools_used):
@@ -213,25 +207,20 @@ class SoporteIncidenciasCrew():
             print(f" Modelo: {self.model}")
             print("=" * 50)
             
-            # Ejecutar el crew
             result = crew_instance.kickoff(inputs=inputs)
             
-            # Obtener información de tokens
             token_usage = getattr(result, 'token_usage', None)
             total_tokens = token_usage.total_tokens if token_usage else 0
             
             print(f"\n Uso de tokens: {total_tokens:,}")
             
-            # Extraer el nivel de frustración del cliente desde el resultado del primer task
-            frustration_level = "Normal"  # Default
+            frustration_level = "Normal"
             if hasattr(result, 'tasks_output') and result.tasks_output:
-                # El primer task es el análisis de sentimiento
                 sentiment_output = result.tasks_output[0].raw if result.tasks_output[0] else ""
                 frustration_level = sentiment_output.strip() if sentiment_output else "Normal"
             
             self.execution_tracker.set_client_frustration(frustration_level)
             
-            # Registrar métricas de éxito
             log_crew_execution(
                 ticket_id=ticket_id,
                 provider=self.provider,
@@ -247,13 +236,12 @@ class SoporteIncidenciasCrew():
             return result
             
         except Exception as e:
-            # Registrar métricas de error
             log_crew_execution(
                 ticket_id=ticket_id,
                 provider=self.provider,
                 model=self.model,
                 client_frustration=self.execution_tracker.client_frustration,
-                total_tokens=0,  # No hay tokens si falló
+                total_tokens=0,  
                 tools_used=self.execution_tracker.get_tools_list(),
                 agents_used=self.execution_tracker.get_agents_list(),
                 processing_time=self.execution_tracker.get_execution_time(),

@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 from crewai.tools import tool
 
 MCP_SERVER_URL = "http://localhost:8000/buscar_en_wiki"

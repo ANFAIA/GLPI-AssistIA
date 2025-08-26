@@ -1,4 +1,4 @@
-analizar_sentimiento_task:
+﻿analizar_sentimiento_task:
   description: >
     Analizar el texto de la incidencia proporcionada en la variable {incidencia}.
     Identificar el estado emocional del usuario (frustrado, calmado, apurado, etc.)

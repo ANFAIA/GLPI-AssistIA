@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+﻿from fastapi import FastAPI
 from fastapi_mcp import FastApiMCP
 
 from glpiassistiaserver.tools.mcp_tools.wiki_handler import search_wiki
@@ -14,7 +14,6 @@ def buscar_en_wiki(query: str = Query(..., min_length=1)) -> str:
     print(f"MCP Server: Recibida petición para buscar en la wiki: '{query}'")
     return search_wiki(query)
 
-# MONTA GLPI
 app.include_router(glpi_router)
 
 @app.get("/")
@@ -26,4 +25,4 @@ mcp.mount_http()
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8009)

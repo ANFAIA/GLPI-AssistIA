@@ -1,7 +1,7 @@
 # Instalación de GLPI en local y breve análisis
 Para poner en contexto el desarrollo del plugin y probar tanto el programa como el plugin, se ha procedido a realizar una instalación local de GLPI mediante Docker. A continuación se exponen unos matices y anotaciones a tener en cuenta.
 ## Instalación de Docker
-Para poder ejecutar GLPI en LocalHost debemos instalar Docker, este creara unos contenedores en nuestro eqípo que nos permitrán hacer servidores locales que emplean un kernel de Linux.
+Para poder ejecutar GLPI en LocalHost debemos instalar Docker, este creara unos contenedores en nuestro equipo que nos permitirán hacer servidores locales que emplean un kernel de Linux.
 Una vez instalemos docker debemos de crear un archivo **docker-compose.yml** con la siguiente estructura:
 
 ```yaml

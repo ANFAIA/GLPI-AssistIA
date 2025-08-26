@@ -2,7 +2,10 @@
 
 function plugin_glpiassistia_trigger_ia_on_ticket($ticket)
 {
-    if ($ticket->getType() !== 'Ticket') {
+    Toolbox::logInFile('glpi_assistia', "=== HOOK TRIGGERED ===\n");
+    
+    if (!$ticket instanceof Ticket) {
+        Toolbox::logInFile('glpi_assistia', "Error: Objeto no es un Ticket\n");
         return true;
     }
 
@@ -10,25 +13,34 @@ function plugin_glpiassistia_trigger_ia_on_ticket($ticket)
     $title = isset($ticket->fields['name']) ? $ticket->fields['name'] : '';
     $content = isset($ticket->fields['content']) ? $ticket->fields['content'] : '';
 
-    // Crear el payload en el formato solicitado
+    Toolbox::logInFile('glpi_assistia', "Ticket ID: $ticket_id, Title: $title\n");
+
+    $config = Config::getConfigurationValues('plugin:AssistIA');
+    $enabled = isset($config['enabled']) ? (int)$config['enabled'] : 0;
+    
+    if (!$enabled) {
+        Toolbox::logInFile('glpi_assistia', "Plugin deshabilitado, no se procesa ticket $ticket_id\n");
+        return true;
+    }
+
     $payload = [
         'id' => $ticket_id,
         'title' => $title,
         'description' => $content
     ];
 
-    // Obtener la configuración del plugin
-    $config = Config::getConfigurationValues('plugin:AssistIA');
     $server_url = isset($config['server_url']) && !empty($config['server_url'])
         ? rtrim($config['server_url'], '/')
         : null;
 
     if (!$server_url) {
-        // Registrar error si no hay URL configurada
         Toolbox::logInFile('glpi_assistia', 
             "Error: URL del servidor AssistIA no configurada para el ticket ID: $ticket_id\n");
         return true;
     }
+
+    Toolbox::logInFile('glpi_assistia', "Enviando a: $server_url\n");
+    Toolbox::logInFile('glpi_assistia', "Payload: " . json_encode($payload) . "\n");
 
     // Preparar la petición HTTP
     $ch = curl_init($server_url);
@@ -54,13 +66,13 @@ function plugin_glpiassistia_trigger_ia_on_ticket($ticket)
     $curl_error = curl_error($ch);
     curl_close($ch);
 
-    // Verificar si hubo errores
+    Toolbox::logInFile('glpi_assistia', "HTTP Code: $http_code, Response: $response\n");
+
     if ($response === false || !empty($curl_error)) {
         $error_msg = "Error de conexión con el servidor AssistIA para el ticket ID: $ticket_id - " . 
                      ($curl_error ?: 'Error desconocido');
         Toolbox::logInFile('glpi_assistia', $error_msg . "\n");
         
-        // Mostrar mensaje de error al usuario si está en interfaz web
         if (isset($_SESSION['glpiactiveprofile'])) {
             Session::addMessageAfterRedirect(
                 'Error: No se pudo conectar con el servidor AssistIA. Verifique la configuración.',
@@ -91,6 +103,23 @@ function plugin_glpiassistia_trigger_ia_on_ticket($ticket)
     Toolbox::logInFile('glpi_assistia', 
         "Ticket ID: $ticket_id enviado exitosamente al servidor AssistIA\n");
 
+    // Mensaje de éxito al usuario
+    if (isset($_SESSION['glpiactiveprofile'])) {
+        Session::addMessageAfterRedirect(
+            "Ticket enviado a AssistIA Server para procesamiento con IA.",
+            false,
+            INFO
+        );
+    }
+
+    return true;
+}
+
+function plugin_glpiassistia_post_item_form($params)
+{
+    if ($params['item']->getType() == 'Ticket') {
+        Toolbox::logInFile('glpi_assistia', "POST ITEM FORM hook triggered\n");
+    }
     return true;
 }
 

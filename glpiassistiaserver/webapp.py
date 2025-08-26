@@ -1,4 +1,4 @@
-from uuid import uuid4
+﻿from uuid import uuid4
 import json
 import sys
 import os
@@ -6,6 +6,8 @@ from starlette.applications import Starlette
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 
 jobs = {}
 
@@ -28,9 +30,11 @@ def run_crew(data, job_id):
         print(f"[GLPI-WEBAPP/CLI] Job {job_id} -> python -m glpiassistiaserver '{cli_arg}'")
         import subprocess
         env = os.environ.copy()
+        project_root = os.path.dirname(os.path.dirname(__file__))
         proc = subprocess.run(
             [sys.executable, "-m", "glpiassistiaserver", cli_arg],
             env=env,
+            cwd=project_root,
             text=True
         )
 
@@ -45,6 +49,27 @@ def run_crew(data, job_id):
         msg = f"{exc.__class__.__name__}: {exc}"
         jobs[job_id] = {"status": "error", "message": msg}
         print(f"[GLPI-WEBAPP/CLI] EXCEPTION Job {job_id} -> {msg}")
+
+async def health_check(request):
+    """Endpoint para verificar que el servidor está funcionando"""
+    if request.method == "POST":
+        try:
+            data = await request.json()
+            if data.get("id") == 0 and "test" in str(data.get("title", "")).lower():
+                return JSONResponse({
+                    "status": "ok",
+                    "message": "Conexión exitosa - GLPI AssistIA Server está funcionando correctamente",
+                    "test": True,
+                    "received_data": data
+                })
+        except:
+            pass
+    
+    return JSONResponse({
+        "status": "ok", 
+        "message": "GLPI AssistIA Server is running",
+        "version": "1.0.0"
+    })
 
 async def run_agent(request):
     """Crea job en background y lanza el CLI."""
@@ -76,7 +101,17 @@ async def get_result(request):
     return JSONResponse(result)
 
 routes = [
+    Route("/", health_check, methods=["GET", "POST"]),  
+    Route("/health", health_check, methods=["GET", "POST"]),  
     Route("/run-agent", run_agent, methods=["POST"]),
     Route("/get-result/{job_id}", get_result, methods=["GET"]),
 ]
-app = Starlette(debug=True, routes=routes)
+
+middleware = [
+    Middleware(CORSMiddleware, 
+               allow_origins=['*'], 
+               allow_methods=['*'], 
+               allow_headers=['*'])
+]
+
+app = Starlette(debug=True, routes=routes, middleware=middleware)
