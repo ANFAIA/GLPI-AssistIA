@@ -82,13 +82,12 @@ class Config extends CommonDBTM
         \Dropdown::showYesNo('enabled', $enabled);
         echo "</td></tr>";
         
-        // Campo URL del servidor
         echo "<tr class='tab_bg_1'>";
         echo "<td>" . __('URL del servidor AssistIA (AssistIA Server)', 'glpiassistia') . "</td>";
         echo "<td>";
         echo "<input type='url' name='server_url' size='80' value='" . 
-             Html::cleanInputText($server_url) . "' placeholder='http://localhost:8000/api/tickets'>";
-        echo "<br><small>" . __('Ejemplo: http://servidor.com:8000/api/tickets', 'glpiassistia') . "</small>";
+              Html::cleanInputText($server_url) . "' placeholder='http://localhost:8000/run-agent'>";
+        echo "<br><small>" . __('Ejemplo: http://servidor.com:8000/run-agent | Si usas Docker utiliza host.docker.internal en vez de localhost o similar', 'glpiassistia') . "</small>";
         echo "</td></tr>";
         
         echo "<tr class='tab_bg_1'>";
@@ -98,53 +97,15 @@ class Config extends CommonDBTM
         echo "<br><small>" . __('Tiempo máximo de espera para la conexión (1-60 segundos)', 'glpiassistia') . "</small>";
         echo "</td></tr>";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2' class='center'>";
-        if (!empty($server_url)) {
-            echo "<button type='button' class='btn btn-info' onclick='testAssistIAConnection()'>";
-            echo __('Probar conexión', 'glpiassistia') . "</button>&nbsp;";
-        }
-        echo "</td></tr>";
-
         echo "<tr class='tab_bg_2'>";
         echo "<td colspan='2' class='center'>";
         echo "<input type='submit' name='update' class='btn btn-primary' value=\"" . 
-             _sx('button', 'Guardar') . '">';
+              _sx('button', 'Guardar') . '">';
         echo "</td></tr>";
 
         echo "</table></div>";
         Html::closeForm();
 
-        if (!empty($server_url)) {
-            echo "<script>
-            function testAssistIAConnection() {
-                const url = '" . Html::cleanInputText($server_url) . "';
-                const testData = {
-                    id: 0,
-                    title: 'Test de conexión',
-                    description: 'Esta es una prueba de conexión desde GLPI AssistIA'
-                };
-                
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(testData)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('✅ Conexión establecida con GLPI AssistIA Server 🎉');
-                    } else {
-                        alert('⚠️ Error de conexión: HTTP ' + response.status);
-                    }
-                })
-                .catch(error => {
-                    alert('❌ Error de conexión: ' + error.message);
-                });
-            }
-            </script>";
-        }
     }
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
