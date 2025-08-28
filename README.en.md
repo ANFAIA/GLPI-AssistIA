@@ -11,7 +11,7 @@ The system’s core is designed around a workflow that is triggered by the creat
 This `CrewAI` connects to external tools (knowledge bases, monitoring systems) through an **MCP Server (Model Context Protocol)**, which acts as a data bus.
 
 ### Ticket Workflow
-![Architecture Diagram V3](https://raw.githubusercontent.com/ANFAIA/GLPI-AssistIA/c81ce359886bd2f5c9111d7a7446144947432ea3/docs/BigPicture%20V3.svg)
+![Architecture Diagram V3](https://raw.githubusercontent.com/ANFAIA/GLPI-AssistIA/b0f1cb55bdc569c4f83b0b36e34c96536fe1d644/docs/BigPicture_VersionActual.svg)
 
 1. **Entry in GLPI**: A user or technician creates an incident ticket.
 2. **Agent Activation**: The incident is transferred to the `CrewAI` system hosted in GLPI AssistIA Server for processing.

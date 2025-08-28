@@ -11,7 +11,7 @@ O núcleo do sistema está deseñado arredor dun fluxo de traballo que se activa
 Este `CrewAI` conéctase a ferramentas externas (bases de coñecemento, sistemas de monitorización) a través dun **Servidor MCP (Model Context Protocol)**, que actúa como un bus de datos.
 
 ### Fluxo de Traballo do Ticket
-![Diagrama de Arquitectura V3](https://raw.githubusercontent.com/ANFAIA/GLPI-AssistIA/c81ce359886bd2f5c9111d7a7446144947432ea3/docs/BigPicture%20V3.svg)
+![Diagrama de Arquitectura V3](https://raw.githubusercontent.com/ANFAIA/GLPI-AssistIA/b0f1cb55bdc569c4f83b0b36e34c96536fe1d644/docs/BigPicture_VersionActual.svg)
 
 1.  **Entrada en GLPI**: Un usuario ou técnico crea un ticket de incidencia.
 2.  **Activación do Axente**: A incidencia transfírese ao sistema `CrewAI` aloxado en GLPI AssistIA Server para o seu procesamento.
