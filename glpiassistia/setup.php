@@ -48,7 +48,7 @@ function plugin_version_glpiassistia()
         'name'           => 'GLPI AssistIA',
         'version'        => '1.0.0',
         'author'         => 'ANFAIA - Anxo López Rodríguez - Miguel Gonzalez (Aitire)',
-        'license'        => 'GPL v3+',
+        'license'        => 'Apache 2.0',
         'homepage'       => 'https://github.com/ANFAIA/GLPI-AssistIA',
         'requirements'   => [
             'glpi' => [

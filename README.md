@@ -1,4 +1,6 @@
 # GLPI AssistIA
+Este README está disponible en varios idiomas: [Español](README.md) | [Galego](README.gl.md) | [English](README.en.md)
+
 ## 🎯 Caso de uso
 
 La gestión de incidencias, especialmente en departamentos de IT, requiere de tareas que muchas veces son repetitivas como revisar Wikis, documentación o la ejecución de comandos como Ping a determinados servidores. GLPI AssistIA busca reducir toda esta carga con un informe previo de la incidencia a tratar. Una vez se registra una incidencia en el sistema, esta se envía a un servidor (GLPI AssistIA Server) que genera un informe con posíbles soluciones, este informe estará visible para el agente que trate esta incidencia como una nota provada en el momento que tome el caso reduciendo los tiempos de respuesta.
@@ -88,6 +90,10 @@ A continuación se muestra la interfaz del plugin
 
 <img width="475.5" height="226.75" alt="CONFIGURACION" src="https://github.com/user-attachments/assets/58d67305-c90a-48a0-8980-1af7b5af24fa" />
 
+## Video de configuración rápida y ejemplo práctico
+En el siguiente video se muestra la configuración del plugin y un ejemplo de uso
+[![GLPIASSISTIA](https://img.youtube.com/vi/Me0OWoNrdao/0.jpg)](https://www.youtube.com/watch?v=Me0OWoNrdao)
+
 
 ## 📊 Métricas de Éxito
 
@@ -99,5 +105,5 @@ El éxito del proyecto se medirá por la consecución de los siguientes objetivo
   * Reducción de más del **40%** en el tiempo promedio de resolución de incidencias.
   * Nivel de satisfacción del usuario superior a **4.0/5.0**.
 ---
-  ## Colaboración
+  ## 🤝 Colaboración
   Este proyecto ha sido posíble gracias al programa de Becas de Verano de ANFAIA y la colaboración de Aitire
