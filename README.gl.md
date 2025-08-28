@@ -90,7 +90,7 @@ A continuación móstrase a interface do plugin:
 
 ## Vídeo de configuración rápida e exemplo práctico
 No seguinte vídeo móstrase a configuración do plugin e un exemplo de uso:  
-[![GLPIASSISTIA](https://img.youtube.com/vi/Me0OWoNrdao/0.jpg)](https://www.youtube.com/watch?v=Me0OWoNrdao)
+[![GLPIASSISTIA](https://img.youtube.com/vi/tBrVdnGEEe4/0.jpg)](https://www.youtube.com/watch?v=tBrVdnGEEe4)
 
 ## 📊 Métricas de Éxito
 
