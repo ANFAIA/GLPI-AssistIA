@@ -1,6 +1,6 @@
-# Modelos Ollama para Agentes CrewAI
+# Modelos LLM para Agentes CrewAI
 
-A continuación se presenta un análisis y recomendación de los modelos de Ollama más adecuados para cada uno de los agentes definidos en el fichero agents.yaml, considerando sus roles, objetivos y las características de los distintos modelos de lenguaje disponibles.
+A continuación se presenta un análisis y recomendación de los modelos de más adecuados para cada uno de los agentes definidos en el fichero agents.yaml, considerando sus roles, objetivos y las características de los distintos modelos de lenguaje disponibles.
 
 ## 1. Agente: `analista_sentimiento`
 
@@ -37,3 +37,6 @@ Este agente es responsable de buscar en múltiples fuentes de conocimiento (Wiki
 ### **Modelo Recomendado: `deepseek-r1`**
 
 Dispone de grandes capacidades de razonamiento, a menudo comparadas con las de modelos de vanguardia. Mediante la cadena de pensamiento procesa una consulta, la descompone en pasos lógicos, busca información en diversas fuentes y, finalmente, sintetiza los hallazgos en un informe estructurado y coherente, exactamente lo que buscamos. Su capacidad razonamiento lo hace perfecto para conectar un problema las múltiples tools disponibles.
+
+## Elección final
+Con el objetivo de simplificar lo máximo posible el desarrollo y ejecución de la herraienta, se ha decidido emplear el modelo Qwen 3 como LLM por defecto en todos los agentes debido a que cubre las características y necesidades del sistema. Emplear el mismo LLM nos permitirá reducir el espacio de instalación del resto y suprimir el tiempo de espera que produce el cambio de LLM.
